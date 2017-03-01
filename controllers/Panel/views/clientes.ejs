@@ -1,24 +1,10 @@
 <!DOCTYPE html>
-<html lang="es>
+<html lang="es">
 <head>
 <% include ../views/Secciones/head %>
 	<title><%=title%></title>
 	  
-    <style>
-      .scroll {
-        overflow-x: scroll;
-        width: 100%;
-      }
-
-      .scroll table {
-        width: 100%;
-      }
-      .table > thead > tr > th, td {
-        vertical-align: middle !important;
-        text-align: center;
-      }
-
-    </style>
+   <% include ../views/Secciones/header %>
 </head>
 <body>
 <% include ../views/Secciones/menu %>
@@ -207,7 +193,7 @@
 
 			          	var row = $("<tr>")
 
-			            $('.Table').append(row); // this will append tr element to table... keep its reference for a while since we will add cels into it
+			            $('.Table').append(row); 
 			            row.append($("<td>" + result[i].idCliente + "</td>"));
 			            row.append($("<td>" + result[i].Nombre + "</td>"));
 			            row.append($("<td>" + result[i].DireccionNeni + "</td>"));

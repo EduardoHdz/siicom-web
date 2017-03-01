@@ -3,6 +3,7 @@
 <head>
 <% include ../views/Secciones/head %>
 	<title><%=title%></title>
+	<% include ../views/Secciones/header %>
 </head>
 <body>
 <% include ../views/Secciones/menu %>
@@ -22,7 +23,7 @@
 		</div><!--/.row-->
     </div>
 
-      <!--CREAR CLIENTE-->
+      <!--AGREGAR TÉCNICO-->
         <div class="modal inmodal" id="addTechnical" tabindex="-1" role="dialog" aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content animated bounceIn">
@@ -63,7 +64,7 @@
         </div>
 
 
-        <!--ACTUALIZAR CLIENTE-->
+        <!--ACTUALIZAR TÉCNICO-->
         <div class="modal inmodal" id="editClient" tabindex="-1" role="dialog" aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content animated bounceIn">
@@ -118,11 +119,11 @@
                    <th nowrap>ID-Nextel</th>
                    <th nowrap>Puesto</th>
                    <th nowrap>Opciones</th>
-                    
                   </tr>
+
                 </thead>
                 <tbody class="Table">
-                  
+
                 </tbody>
                 <tfoot>
                   <tr>
@@ -190,7 +191,7 @@
 
 			          	var row = $("<tr>")
 
-			            $('.Table').append(row); // this will append tr element to table... keep its reference for a while since we will add cels into it
+			            $('.Table').append(row); 
 			            row.append($("<td>" + result[i].idTécnico + "</td>"));
 			            row.append($("<td>" + result[i].Nombre + "</td>"));
 			            row.append($("<td>"+ result[i].Tel + "</td>"));
@@ -198,13 +199,11 @@
 			            row.append($("<td>"+ result[i].Puesto + "</td>"));
 			            row.append($("<td >" + " &nbsp; " + "<button onclick=editarT("+result[i].idTécnico+") class='widget-icon'><i class='fa fa-edit text-navy'></i></button>" + " &nbsp; " + "<button class='widget-icon' id='Opcion2' onclick=delTech("+result[i].idTécnico+")><i class='fa fa-trash text-navy'></i></button>" + "</td>"));
 			            $('.footable').footable();
-                  }
+                  		}
 			        }
 		        }
-		        });
+		    });
 		});
-			</script>
-	
-	
+</script>		
 </body>
 </html>
