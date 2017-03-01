@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="UTF-8">
+  <title> Iniciar sesión</title>
+  <meta name="viewport" content="width=device-width">
+   <link rel="stylesheet" href="../css/Login.css">
+  <script src="../js/jquery-1.11.1.min.js"></script>
+
+
+  
+</head>
+
+<body>
+  
+<!--Google Font - Work Sans-->
+<link href='https://fonts.googleapis.com/css?family=Work+Sans:400,300,700' rel='stylesheet' type='text/css'>
+
+<div class="container">
+  <div class="profile">
+    <button class="profile__avatar" id="toggleProfile">
+     <img src="../img/acceso.png" alt="Avatar" /> 
+    </button>
+    <form action="/login" method="post">
+      
+    <div class="profile__form">
+      <div class="profile__fields">
+        <div class="field">
+          <input type="email" id="fieldUser" class="input" name="txtUser" required pattern=.*\S.* />
+          <label for="fieldUser" class="label">Username</label>
+        </div>
+        <div class="field">
+          <input type="password" id="fieldPassword" class="input" name="txtPass" required pattern=.*\S.* />
+          <label for="fieldPassword" class="label">Password</label>
+        </div>
+        <div class="profile__footer">
+        <button type="submit">
+           <div class="button raised blue">
+            <div class="center" fit>LOGIN</div>
+          </div></button>
+          Regresar <a href="/"> aquí </a>
+        </div>
+      </div>
+     </div>
+      
+    </form>
+  </div>
+</div>
+<script>
+  $(document).ready(function(){
+    document.getElementById('toggleProfile').addEventListener('click', function () {
+      [].map.call(document.querySelectorAll('.profile'), function(el) {
+        el.classList.toggle('profile--open');
+      });
+    });
+  });
+
+</script>
+</body>
+</html>
