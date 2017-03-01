@@ -218,7 +218,7 @@ app.get('/infoS', login, function(req, res){
 });
 
 app.post('/Serv',login,function(req, res){
-	BD.query("INSERT INTO servicios (idTécnico, Problema, idUsuario, Observaciones, Estatus, idCliente) VALUES (?,?,?,?,?,?)",[req.body.idTecnico, req.body.Problema, req.body.idUsuario, req.body.Observaciones, req.body.Estatus, req.body.idCliente],
+	BD.query("INSERT INTO servicios (idTécnico, idTipoServicio, Problema, idUsuario, Observaciones, Estatus, idCliente) VALUES (?,?,?,?,?,?)",[req.body.idTecnico, req.body.idTipoServicio, req.body.Problema, req.body.idUsuario, req.body.Observaciones, req.body.Estatus, req.body.idCliente],
 		function(err, result){
 			console.log(err);
 			console.log(result);
@@ -235,13 +235,13 @@ app.get('/editServ/:id', login, function(req, res){
 });
 
 app.post('/upServ',login, function(req, res){
-	BD.query('UPDATE servicios set idTécnico = ?, Problema = ?, idUsuario = ?, Observaciones = ?, Estatus = ? WHERE idCliente = ?',[req.body.idTecnico, req.body.Problema, req.body.idUsuario, req.body.Observaciones, req.body.Estatus, req.body.idCliente],
+	BD.query('UPDATE servicios set idTécnico = ?, idTipoServicio = ?, Problema = ?, idUsuario = ?, Observaciones = ?, Estatus = ? WHERE idCliente = ?',[req.body.idTecnico, req.body.idTipoServicio, req.body.Problema, req.body.idUsuario, req.body.Observaciones, req.body.Estatus, req.body.idCliente],
 		function(err, result){
 			res.redirect('/services');
 		});
 });
 
-app.post('/ServDone/:id',login, function(req, res){
+app.get('/ServDone/:id',login, function(req, res){
 	BD.query('UPDATE servicios set Estatus = ?',[3, req.params.id],
 		function(err, result){
 			if(!err){
