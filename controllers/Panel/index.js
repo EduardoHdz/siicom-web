@@ -46,9 +46,7 @@ app.get('/dashboard', login, function(req, res) {
 });
 
 app.get('/client', login, function(req, res){
-	BD.query("SELECT * from clientes", function(err, result){
 		res.render('clientes',{title:"Clientes"});
-	});
 });
 
 app.get('/technical',login, function(req, res){
@@ -105,6 +103,45 @@ app.post('/upClient',login, function(req, res){
 
 app.get('/delClient/:id', login, function(req, res){
 	BD.query("DELETE from clientes WHERE idCliente = ?",[req.params.id], function(err, result){
+		if(!err){
+			res.send("done");
+		}else{
+			res.send(err);
+		}
+	});
+});
+
+app.get('/infoTech', login, function(req, res){
+	BD.query("SELECT * from técnicos", function(err, result){
+		res.send(result);
+	});
+});
+
+app.post('/technical',login,function(req, res){
+	BD.query("INSERT INTO técnicos (Nombre, Tel, IDNextel, Puesto) VALUES (?,?,?,?)",[req.body.Nombre, req.body.Tel, req.body.IDNextel, req.body.Puesto],
+		function(err, result){
+			if(!err){
+			res.redirect('/technical');
+			}
+		});
+});
+
+app.get('/editTech/:id', login, function(req, res){
+	BD.query("SELECT * from técnicos WHERE idTécnico = ?",[req.params.id], function(err, result){
+		res.send(result);
+	});
+});
+
+app.post('/upTech',login, function(req, res){
+	BD.query('UPDATE técnicos set Nombre = ?, Tel = ?, IDNextel = ?, Puesto = ? WHERE idTécnico = ?',[req.body.Nombre, req.body.Tel, req.body.IDNextel, req.body.Puesto, req.body.idTécnico],
+		function(err, result){
+			res.redirect('/technical');
+		});
+
+});
+
+app.get('/delTech/:id', login, function(req, res){
+	BD.query("DELETE from técnicos WHERE idTécnico = ?",[req.params.id], function(err, result){
 		if(!err){
 			res.send("done");
 		}else{
