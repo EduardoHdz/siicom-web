@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<% include ../views/Secciones/head %>
+	<title><%=title%></title>
+	<% include ../views/Secciones/header %>
+</head>
+<body>
+<% include ../views/Secciones/menu %>
+<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">	
+
+  <div class="row wrapper border-bottom white-bg page-heading">
+    <div class="row">
+			<div class="col-sm-12">
+        <h1 class="page-header">Tipo de servicios</h1>
+      </div>
+
+      <div class="col-sm-12">
+				 <div class="title-action">
+                <button type="button" style="margin-left: 1%; margin-bottom: 2%;" class="btn btn-primary" data-toggle="modal" data-target="#addclient">Nuevo tipo de servicio</button>
+            </div>
+			</div>
+		</div><!--/.row-->
+    </div>
+
+      <!--CREAR SERVICIO-->
+        <div class="modal inmodal" id="addclient" tabindex="-1" role="dialog" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content animated bounceIn">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Crear nuevo servicio</h4>
+              </div>
+               <div class="modal-body">
+                 <form action="/tipoServ" method="post" name="info_form">
+                     <div class="modal-body clearfix">
+                         <div class="controls">
+                             <div class="form-group">
+                                 <label for="Nombre">Nombre</label>
+                                  <input type="text" class="form-control" id="Nombre" name="Nombre" placeholder="Nombre" required="" >
+                              </div>
+                              <div class="form-group">
+                                  <label for="Desc">Descripción</label>
+                                  <input type="text" class="form-control" id="Desc" name="Descripcion" placeholder="Descripción" required="" >
+                              </div>
+                          </div>
+                      </div>
+                      <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Agregar</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!--ACTUALIZAR TIPO DE SERVICIO-->
+        <div class="modal inmodal" id="editTipoServicio" tabindex="-1" role="dialog" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content animated bounceIn">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Actualizar tipo de servicio</h4>
+              </div>
+               <div class="modal-body">
+                 <form action="/upTipoServ" method="post" name="info_form">
+                     <div class="modal-body clearfix">
+                         <div class="controls">
+                             <div class="form-group">
+                                 <label for="Nombre1">Nombre</label>
+                                  <input type="text" class="form-control" id="Nombre1" name="Nombre" placeholder="Nombre" required="" >
+                              </div>
+                              <div class="form-group">
+                                  <label for="Desc1">Descripción</label>
+                                  <input type="text" class="form-control" id="Desc1" name="Descripcion" placeholder="Descripción" required="" >
+                              </div>
+                              <input type="hidden" class="form-control" id="id" name="idTipoServicio" required="" >
+                          </div>
+                      </div>
+                      <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Actualizar</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+    <div class="ibox-content" id="informacion">
+          <div class="scroll">
+            <input type="text" class="form-control input-sm m-b-xs" id="filter" placeholder="Buscar ...">
+              <table class="footable table table-stripped" data-filter="#filter" data-page-size="10" id="informacion">
+                <thead>
+                  <tr>
+
+                   <th nowrap>ID Tipo servicio</th>
+                   <th nowrap>Nombre</th>
+                   <th nowrap>Descripción</th>
+                   <th nowrap>Opciones</th>
+                    
+                  </tr>
+                </thead>
+                <tbody class="Table">
+                  
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="11">
+                      <ul class="pagination pull-right"></ul>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+     </div>
+	
+
+</div>
+
+	<% include ../views/Secciones/footer %>
+	<script>
+		 function editarTS(id) {
+         $('#editTipoServicio').modal();
+         $.ajax({
+             url: "/editTipoServ/" + id + "",
+             type: "GET",
+             success: function (result) {
+                 $('#Nombre1').val(result[0].Nombre);
+                 $('#Desc1').val(result[0].Descripcion);
+                 $('#id').val(result[0].idTipoServicio);
+             }, error: function (result) {
+
+             }
+
+         });
+     }
+
+
+
+      function delTipoServ(id) {
+         $.ajax({
+             url: "/delTipoServ/" + id + "",
+             type: "GET",
+             success: function (result) {
+                if(result = "done"){
+                  location.reload();
+                }else{
+                  alert("Ocurrio un error: "+ result);
+                }
+             }, error: function (result) {
+                alert(result);
+             }
+
+         });
+     }
+
+		$("#sub-item-1").collapse();
+		$(document).ready(function(){
+			
+			$("#sub-item-addService").addClass("active");
+
+			$.ajax({
+				url: "/infoTS",
+				Type: "GET",
+				success: function(result){
+					if(result==0){
+			        }else{
+
+			          for (var i = 0; i <= result.length; i++) {
+
+			          	var row = $("<tr>")
+
+			            $('.Table').append(row); 
+			            row.append($("<td>" + result[i].idTipoServicio + "</td>"));
+			            row.append($("<td>" + result[i].Nombre + "</td>"));
+			            row.append($("<td>" + result[i].Descripcion + "</td>"));
+			            row.append($("<td >" + " &nbsp; " + "<button onclick=editarTS("+result[i].idTipoServicio+") class='widget-icon'><i class='fa fa-edit text-navy'></i></button>" + " &nbsp; " + "<button class='widget-icon' id='Opcion2' onclick=delTipoServ("+result[i].idTipoServicio+")><i class='fa fa-trash text-navy'></i></button>" + "</td>"));
+			            $('.footable').footable();
+                  		}
+			        }
+		        }
+
+		        });
+		});
+	</script>	
+</body>
+</html>

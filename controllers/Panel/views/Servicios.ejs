@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
 <% include ../views/Secciones/head %>
 	<title><%=title%></title>
@@ -9,25 +9,233 @@
 <% include ../views/Secciones/menu %>
 <div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">	
 
-<div class="row">
-			<div class="col-lg-12">
-				<h1 class="page-header">Gestionar servicios</h1>
-			</div>
+  <div class="row wrapper border-bottom white-bg page-heading">
+    <div class="row">
+			<div class="col-sm-12">
+        <h1 class="page-header">Realizar servicio</h1>
+      </div>
 		</div><!--/.row-->
-	
+    </div>
 
+
+  <div class="ibox-content">
+     <div class="col-md-4">
+          <form action="/Serv" method="post" class="form-horizontal">
+
+            <div class="form-group">
+              <label for="idTecnico" control-label">ID Técnico</label>
+              <input type="text" id="idTecnico" name="idTecnico" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label for="idUsuario">ID Usuario</label>
+              <input type="text" id="idUsuario" name="idUsuario" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label for="idCliente">ID Cliente</label>
+              <input type="text" id="idCliente" name="idCliente" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label for="Problema">Problema</label>
+              <input type="text" id="Problema" name="Problema" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label for="Observaciones">Observaciones</label>
+              <input type="text" id="Observaciones" name="Observaciones" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label for="Estado">Estado</label>
+              <input type="text" id="Estado" name="Estatus" class="form-control">
+            </div>
+             
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Registrar servicio</button>
+              </div>
+          </form>
+    </div>
+
+    <div class="col-md-8">
+          <div class="scroll">
+            <input type="text" class="form-control input-sm m-b-xs" id="filter" placeholder="Buscar ...">
+              <table class="footable table table-stripped" data-filter="#filter" data-page-size="6" id="informacion">
+                <thead>
+                  <tr>
+
+                   <th nowrap>ID Servicio</th>
+                   <th nowrap>ID Técnico</th>
+                   <th nowrap>ID Usuario</th>
+                   <th nowrap>ID Cliente</th>
+                   <th nowrap>Problema</th>
+                   <th nowrap>Observaciones</th>
+                   <th nowrap>Estado</th>
+                   <th nowrap>Opciones</th>
+                    
+                  </tr>
+                </thead>
+                <tbody class="Table">
+                  
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="11">
+                      <ul class="pagination pull-right"></ul>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+     </div>
+
+
+  </div>
+
+  <!--ACTUALIZAR SERVICIO-->
+  <div class="modal inmodal" id="editServ" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content animated bounceIn">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title">Actualizar Servicio</h4>
+        </div>
+          <div class="modal-body">
+            <form action="/upServ" method="post" name="info_form">
+                <div class="modal-body clearfix">
+                    <div class="controls">
+                        <div class="form-group">
+                          <label for="idTecnico1" control-label">ID Técnico</label>
+                          <input type="text" id="idTecnico1" name="idTecnico" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                          <label for="idUsuario1">ID Usuario</label>
+                          <input type="text" id="idUsuario1" name="idUsuario" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                          <label for="idCliente1">ID Cliente</label>
+                          <input type="text" id="idCliente1" name="idCliente" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                          <label for="Problema1">Problema</label>
+                          <input type="text" id="Problema1" name="Problema" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                          <label for="Observaciones1">Observaciones</label>
+                          <input type="text" id="Observaciones1" name="Observaciones" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                          <label for="Estado1">Estado</label>
+                          <input type="text" id="Estado1" name="Estatus" class="form-control">
+                        </div>
+                        <input type="hidden" class="form-control" id="id" name="idServicio" required="" >
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary">Actualizar</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
 </div>
 
 	<% include ../views/Secciones/footer %>
 	<script>
-
+		 
 		$("#sub-item-1").collapse();
+
+     function editarServ(id) {
+         $('#editServ').modal();
+         $.ajax({
+             url: "/editServ/" + id + "",
+             type: "GET",
+             success: function (result) {
+                 $('#idTecnico1').val(result[0].idTécnico);
+                 $('#idUsuario1').val(result[0].idUsuario);
+                 $('#idCliente1').val(result[0].idCliente);
+                 $('#Problema1').val(result[0].Problema);
+                 $('#Observaciones1').val(result[0].Observaciones);
+                 $('#Estado1').val(result[0].Estatus);
+                 $('#id').val(result[0].idServicio);
+             }, error: function (result) {
+
+             }
+
+         });
+     }
+
+      function delServ(id) {
+         $.ajax({
+             url: "/delServ/" + id + "",
+             type: "GET",
+             success: function (result) {
+                if(result = "done"){
+                  location.reload();
+                }else{
+                  alert("Ocurrio un error: "+ result);
+                }
+             }, error: function (result) {
+                alert(result);
+             }
+         });
+     }
+
+     function Done(id) {
+         $.ajax({
+             url: "/ServDone/" + id + "",
+             type: "GET",
+             success: function (result) {
+                if(result = "done"){
+                  location.reload();
+                }else{
+                  alert("Ocurrio un error: "+ result);
+                }
+             }, error: function (result) {
+                alert(result);
+             }
+         });
+     }
+
 		$(document).ready(function(){
 			
-			$("#sub-item-addService").addClass("active");
+			$("#sub-item-Service").addClass("active");
+
+			$.ajax({
+				url: "/infoS",
+				Type: "GET",
+				success: function(result){
+					if(result==0){
+			        }else{
+
+			          for (var i = 0; i <= result.length; i++) {
+                        // put select items here
+
+                          var row = $("<tr>");
+
+                        $('.Table').append(row); 
+                        row.append($("<td>" + result[i].idServicio + "</td>"));  
+                        row.append($("<td>" + result[i].idTécnico + "</td>"));
+                        row.append($("<td>" + result[i].idUsuario + "</td>"));
+                        row.append($("<td>" + result[i].idCliente + "</td>"));
+                        row.append($("<td>"+ result[i].Problema + "</td>"));
+                        row.append($("<td>"+ result[i].Observaciones + "</td>"));
+                        row.append($("<td>"+ result[i].Estatus + "</td>"));
+                        row.append($("<td >" + "<button onclick=Done("+result[i].idServicio+") class='widget-icon'><i class='fa fa-check-square-o text-navy'></i></button>" +" &nbsp; " + "<button onclick=editarServ("+result[i].idServicio+") class='widget-icon'><i class='fa fa-edit text-navy'></i></button>" + " &nbsp; " + "<button class='widget-icon' id='Opcion2' onclick=delServ("+result[i].idServicio+")><i class='fa fa-trash text-navy'></i></button>" + "</td>"));
+                        $('.footable').footable();
+                  		}
+			        }
+		        }
+
+		        });
 		});
-			</script>
-	
-	
+	</script>	
 </body>
 </html>
