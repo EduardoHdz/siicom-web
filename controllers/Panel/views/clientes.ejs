@@ -3,11 +3,7 @@
 <head>
 <% include ../views/Secciones/head %>
 	<title><%=title%></title>
-	  <script>
-      window.onload = function() {
-        window.addEventListener('mousemove', function(){$('.footable').footable()});
-      };
-    </script>
+	  
     <style>
       .scroll {
         overflow-x: scroll;
@@ -28,17 +24,105 @@
 <% include ../views/Secciones/menu %>
 <div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
 
-<div class="row">
-			<div class="col-lg-12">
-				<h1 class="page-header">Clientes</h1>
+   <div class="row wrapper border-bottom white-bg page-heading">
+    <div class="row">
+			<div class="col-sm-12">
+        <h1 class="page-header">Clientes</h1>
+      </div>
+
+      <div class="col-sm-12">
+				 <div class="title-action">
+                <button type="button" style="margin-left: 1%; margin-bottom: 2%;" class="btn btn-primary" data-toggle="modal" data-target="#addclient">Nuevo cliente</button>
+            </div>
 			</div>
 		</div><!--/.row-->
+    </div>
+
+      <!--CREAR CLIENTE-->
+        <div class="modal inmodal" id="addclient" tabindex="-1" role="dialog" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content animated bounceIn">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Crear nuevo cliente</h4>
+              </div>
+               <div class="modal-body">
+                 <form action="/client" method="post" name="info_form">
+                     <div class="modal-body clearfix">
+                         <div class="controls">
+                             <div class="form-group">
+                                 <label for="Nombre">Nombre</label>
+                                  <input type="text" class="form-control" id="Nombre" name="Nombre" placeholder="Nombre" required="" >
+                              </div>
+                              <div class="form-group">
+                                  <label for="Dir">Direccion Ne Ni</label>
+                                  <input type="text" class="form-control" id="Dir" name="DireccionNeni" placeholder="Direccion Ne Ni" required="" >
+                              </div>
+                              <div class="form-group">
+                                  <label for="Tel">Tel</label>
+                                  <input type="text" class="form-control" id="Tel" name="Tel" placeholder="Télefono" required="" >
+                              </div>
+                              <div class="form-group">
+                                  <label for="RFC">RFC</label>
+                                 <input type="text" class="form-control" id="RFC" name="RFC" placeholder="RFC" required="" >
+                              </div>
+                          </div>
+                      </div>
+                      <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Agregar</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
 
 
-    <div class="ibox-content" id="datos">
+        <!--ACTUALIZAR CLIENTE-->
+        <div class="modal inmodal" id="editClient" tabindex="-1" role="dialog" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content animated bounceIn">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Actualizar cliente</h4>
+              </div>
+               <div class="modal-body">
+                 <form action="/upClient" method="post" name="info_form">
+                     <div class="modal-body clearfix">
+                         <div class="controls">
+                             <div class="form-group">
+                                 <label for="Nombre1">Nombre</label>
+                                  <input type="text" class="form-control" id="Nombre1" name="Nombre" placeholder="Nombre" required="" >
+                              </div>
+                              <div class="form-group">
+                                  <label for="Dir1">Direccion Ne Ni</label>
+                                  <input type="text" class="form-control" id="Dir1" name="DireccionNeni" placeholder="Direccion Ne Ni" required="" >
+                              </div>
+                              <div class="form-group">
+                                  <label for="Tel1">Tel</label>
+                                  <input type="text" class="form-control" id="Tel1" name="Tel" placeholder="Teléfono" required="" >
+                              </div>
+                              <div class="form-group">
+                                  <label for="RFC1">RFC</label>
+                                 <input type="text" class="form-control" id="RFC1" name="RFC" placeholder="RFC" required="" >
+                              </div>
+                              <input type="hidden" class="form-control" id="id" name="idCliente" required="" >
+                          </div>
+                      </div>
+                      <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Agregar</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+    <div class="ibox-content" id="informacion">
           <div class="scroll">
             <input type="text" class="form-control input-sm m-b-xs" id="filter" placeholder="Buscar ...">
-              <table class="footable table table-stripped" data-filter="#filter" data-page-size="6" id="datos">
+              <table class="footable table table-stripped" data-filter="#filter" data-page-size="6" id="informacion">
                 <thead>
                   <tr>
 
@@ -70,6 +154,43 @@
 	<script>
 
 
+  function editarC(id) {
+         $('#editClient').modal();
+         $.ajax({
+             url: "/editClient/" + id + "",
+             type: "GET",
+             success: function (result) {
+                 $('#Nombre1').val(result[0].Nombre);
+                 $('#Dir1').val(result[0].DireccionNeni);
+                 $('#Tel1').val(result[0].Tel);
+                 $('#RFC1').val(result[0].RFC);
+                 $('#id').val(result[0].idCliente);
+             }, error: function (result) {
+
+             }
+
+         });
+     }
+
+
+
+      function delClient(id) {
+         $.ajax({
+             url: "/delClient/" + id + "",
+             type: "GET",
+             success: function (result) {
+                if(result = "done"){
+                  location.reload();
+                }else{
+                  alert("Ocurrio un error: "+ result);
+                }
+             }, error: function (result) {
+                alert(result);
+             }
+
+         });
+     }
+
 		$(document).ready(function(){
 			$("#item2").addClass("active");
 
@@ -92,14 +213,14 @@
 			            row.append($("<td>" + result[i].DireccionNeni + "</td>"));
 			            row.append($("<td>"+ result[i].Tel + "</td>"));
 			            row.append($("<td>"+ result[i].RFC + "</td>"));
-			            row.append($("<td >" + "&nbsp; <a onclick=photoAni("+result[i].idClient+") class='widget-icon'><i class='fa fa-camera text-navy'></i></a>" + " &nbsp; " + "<a onclick=editarAni("+result[i].idClient+") class='widget-icon'><i class='fa fa-edit text-navy'></i></a>" + " &nbsp; " + "<a class='widget-icon' id='Opcion2' onclick=eliminar("+result[i].idClient+")><i class='fa fa-trash text-navy'></i></a>" + "</td>"));
-			            }
-
+			            row.append($("<td >" + " &nbsp; " + "<button onclick=editarC("+result[i].idCliente+") class='widget-icon'><i class='fa fa-edit text-navy'></i></button>" + " &nbsp; " + "<button class='widget-icon' id='Opcion2' onclick=delClient("+result[i].idCliente+")><i class='fa fa-trash text-navy'></i></button>" + "</td>"));
+			            $('.footable').footable();
+                  }
 			        }
 		        }
 		        });
 		});
 	</script>
-	<script src="../js/plugins/footable/footable.all.min.js"></script>
+	
 </body>
 </html>

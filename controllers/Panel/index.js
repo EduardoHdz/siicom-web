@@ -74,10 +74,45 @@ app.get('/infoUser',login, function(req, res){
 		});
 });
 
+app.post('/client',login,function(req, res){
+	BD.query("INSERT INTO clientes (Nombre, DireccionNeni, Tel, RFC) VALUES (?,?,?,?)",[req.body.Nombre, req.body.DireccionNeni, req.body.Tel, req.body.RFC],
+		function(err, result){
+			if(!err){
+			res.redirect('/client');
+			}
+		});
+});
 
 app.get('/infoClients', login, function(req, res){
 	BD.query("SELECT * from clientes", function(err, result){
 		res.send(result);
 	});
 });
+
+app.get('/editClient/:id', login, function(req, res){
+	BD.query("SELECT * from clientes WHERE idCliente = ?",[req.params.id], function(err, result){
+		res.send(result);
+	});
+});
+
+app.post('/upClient',login, function(req, res){
+	BD.query('UPDATE clientes set Nombre = ?, DireccionNeni = ?, Tel = ?, RFC = ? WHERE idCliente = ?',[req.body.Nombre, req.body.DireccionNeni, req.body.Tel, req.body.RFC, req.body.idCliente],
+		function(err, result){
+			res.redirect('/client');
+		});
+
+});
+
+app.get('/delClient/:id', login, function(req, res){
+	BD.query("DELETE from clientes WHERE idCliente = ?",[req.params.id], function(err, result){
+		if(!err){
+			res.send("done");
+		}else{
+			res.send(err);
+		}
+	});
+});
+
+
+
 
