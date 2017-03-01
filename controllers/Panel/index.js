@@ -38,6 +38,17 @@ function admin(req, res, next) {
 			}
 		});
 }
+/*
+app.use(function(req, res, next){
+  res.status(404);
+  // respond with html page
+  if (req.accepts('html')) {
+    res.render('404', { url: req.url });
+    return;
+  }
+});
+*/
+
 
 app.get('/dashboard', login, function(req, res) {
 	res.render('dashboard',{
@@ -51,6 +62,10 @@ app.get('/client', login, function(req, res){
 
 app.get('/technical',login, function(req, res){
 	res.render('Tecnicos',{title: "Técnicos"});
+});
+
+app.get('/Tservices',login, function(req, res){
+	res.render('TServicios',{title: "Tipo de Servicios"});
 });
 
 app.get('/services',login, function(req, res){
@@ -72,6 +87,14 @@ app.get('/infoUser',login, function(req, res){
 		});
 });
 
+//============= SECCIÓN DE CLIENTES ============================\\
+
+app.get('/infoClients', login, function(req, res){
+	BD.query("SELECT * from clientes", function(err, result){
+		res.send(result);
+	});
+});
+
 app.post('/client',login,function(req, res){
 	BD.query("INSERT INTO clientes (Nombre, DireccionNeni, Tel, RFC) VALUES (?,?,?,?)",[req.body.Nombre, req.body.DireccionNeni, req.body.Tel, req.body.RFC],
 		function(err, result){
@@ -79,12 +102,6 @@ app.post('/client',login,function(req, res){
 			res.redirect('/client');
 			}
 		});
-});
-
-app.get('/infoClients', login, function(req, res){
-	BD.query("SELECT * from clientes", function(err, result){
-		res.send(result);
-	});
 });
 
 app.get('/editClient/:id', login, function(req, res){
@@ -110,6 +127,8 @@ app.get('/delClient/:id', login, function(req, res){
 		}
 	});
 });
+
+//============= SECCIÓN DE TÉCNICOS ============================\\
 
 app.get('/infoTech', login, function(req, res){
 	BD.query("SELECT * from técnicos", function(err, result){
@@ -150,6 +169,103 @@ app.get('/delTech/:id', login, function(req, res){
 	});
 });
 
+ //============= SECCIÓN DE TIPO DE SERVICIO ============================\\
+app.get('/infoTS', login, function(req, res){
+	BD.query("SELECT * from tiposervicios", function(err, result){
+		res.send(result);
+	});
+});
 
+app.post('/tipoServ',login,function(req, res){
+	BD.query("INSERT INTO tiposervicios (Nombre, Descripcion) VALUES (?,?)",[req.body.Nombre, req.body.Descripcion],
+		function(err, result){
+			if(!err){
+			res.redirect('/Tservices');
+			}
+		});
+});
+
+app.get('/editTipoServ/:id', login, function(req, res){
+	BD.query("SELECT * from tiposervicios WHERE idTipoServicio = ?",[req.params.id], function(err, result){
+		res.send(result);
+	});
+});
+
+app.post('/upTipoServ',login, function(req, res){
+	BD.query('UPDATE tiposervicios set Nombre = ?, Descripcion = ? WHERE idTipoServicio = ?',[req.body.Nombre, req.body.Descripcion, req.body.idTipoServicio],
+		function(err, result){
+			res.redirect('/Tservices');
+		});
+
+});
+
+app.get('/delTipoServ/:id', login, function(req, res){
+	BD.query("DELETE from tiposervicios WHERE idTipoServicio = ?",[req.params.id], function(err, result){
+		if(!err){
+			res.send("done");
+		}else{
+			res.send(err);
+		}
+	});
+});
+
+//============= SECCIÓN DE SERVICIO ============================\\
+
+app.get('/infoS', login, function(req, res){
+	BD.query("SELECT * from servicios", function(err, result){
+		res.send(result);
+	});
+});
+
+app.post('/Serv',login,function(req, res){
+	BD.query("INSERT INTO servicios (idTécnico, Problema, idUsuario, Observaciones, Estatus, idCliente) VALUES (?,?,?,?,?,?)",[req.body.idTecnico, req.body.Problema, req.body.idUsuario, req.body.Observaciones, req.body.Estatus, req.body.idCliente],
+		function(err, result){
+			console.log(err);
+			console.log(result);
+			if(!err){
+			res.redirect('/services');
+			}
+		});
+});
+
+app.get('/editServ/:id', login, function(req, res){
+	BD.query("SELECT * from servicios WHERE idServicio = ?",[req.params.id], function(err, result){
+		res.send(result);
+	});
+});
+
+app.post('/upServ',login, function(req, res){
+	BD.query('UPDATE servicios set idTécnico = ?, Problema = ?, idUsuario = ?, Observaciones = ?, Estatus = ? WHERE idCliente = ?',[req.body.idTecnico, req.body.Problema, req.body.idUsuario, req.body.Observaciones, req.body.Estatus, req.body.idCliente],
+		function(err, result){
+			res.redirect('/services');
+		});
+});
+
+app.post('/ServDone/:id',login, function(req, res){
+	BD.query('UPDATE servicios set Estatus = ?',[3, req.params.id],
+		function(err, result){
+			if(!err){
+			res.send("done");
+		}else{
+			res.send(err);
+		}
+	});
+});
+
+app.get('/delServ/:id', login, function(req, res){
+	BD.query("DELETE from servicios WHERE idServicio = ?",[req.params.id], function(err, result){
+		if(!err){
+			res.send("done");
+		}else{
+			res.send(err);
+		}
+	});
+});
+
+
+
+app.use(function(req, res, next) { 
+ res.status(404).render('404', { url: req.url });
+});
 
 
