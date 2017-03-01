@@ -33,7 +33,23 @@
 			<li id="item1" class=""><a href="/dashboard"><svg class="glyph stroked dashboard-dial"><use xlink:href="#stroked-dashboard-dial"></use></svg> Dashboard</a></li>
 			<li id="item2" class=""><a href="/client"><span class="glyphicon glyphicon-user"></span> Clientes</a></li>
 			<li id="item3" class=""><a href="/technical"><span class="glyphicon glyphicon-wrench"></span> Técnicos</a></li>
-			<li id="item4" class=""><a href="/services"><span class="glyphicon glyphicon-info-sign"></span> Servicios</a></li>
+			<li class="parent ">
+				<a href="#">
+					<span data-toggle="collapse" href="#sub-item-1"><span class="glyphicon glyphicon-info-sign"></span> Servicios</a></span> 
+				</a>
+				<ul class="children collapse" id="sub-item-1">
+					<li id="sub-item-addServices">
+						<a class="" href="/services">
+							<span class="glyphicon glyphicon-info-sign"></span> Agregar servicios</a>
+						</a>
+					</li>
+					<li id="sub-item-regServices">
+						<a class="" href="#">
+							<span class="glyphicon glyphicon-info-sign"></span> Realizar un servicio</a>
+						</a>
+					</li>
+				</ul>
+			</li>
 			<li id="item5" class=""><a href="/record"><span class="glyphicon glyphicon-book"></span> Historíal</a></li>
 			<li id="item6" style="display: none"  class=""><a href="/user"><span class="glyphicon glyphicon-saved"></span> Usuarios</a></li>
 	</div><!--/.sidebar-->
