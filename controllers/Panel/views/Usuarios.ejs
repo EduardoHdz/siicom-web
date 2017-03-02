@@ -1,30 +1,257 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
 <% include ../views/Secciones/head %>
 	<title><%=title%></title>
+	<% include ../views/Secciones/header %>
+  <script>
+      window.onload = function() {
+        window.addEventListener('mousemove', function(){$('.footable').footable()});
+      }
+    </script>
 </head>
 <body>
 <% include ../views/Secciones/menu %>
-<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
-<div class="row">
-			<div class="col-lg-12">
-				<h1 class="page-header">Usuarios</h1>
-			</div>
-		</div><!--/.row-->	
-	
+<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">	
 
+  <div class="row wrapper border-bottom white-bg page-heading">
+    <div class="row">
+			<div class="col-sm-12">
+        <h1 class="page-header">Información de usuarios</h1>
+      </div>
+		</div><!--/.row-->
+    </div>
+
+
+  <div class="ibox-content">
+     <div class="col-md-2">
+          <form action="/user" method="post" class="form-horizontal">
+            
+             <div class="form-group">
+              <label for="Nombre" control-label">Nombre</label>
+             <input type="text" id="Nombre" name="Nombre" placeholder="Nombre" class="form-control" required="">
+            </div>
+
+             <div class="form-group">
+              <label for="Extención" control-label">Extención</label>
+             <input type="text" id="Extención" name="Extencion" placeholder="Extención" class="form-control" required="">
+            </div>
+
+             <div class="form-group">
+              <label for="Email" control-label">Email</label>
+             <input type="email" id="Email" name="Email" placeholder="example@example.com" class="form-control" required="">
+            </div>
+
+             <div class="form-group">
+              <label for="PassEmail" control-label">Contraseña email</label>
+             <input type="text" id="PassEmail" name="PassEmail" placeholder="Contreseña email" class="form-control" required="">
+            </div>
+
+             <div class="form-group">
+              <label for="idCliente" control-label">Empresa</label>
+             <select  type="text" id="idCliente" name="idCliente" placeholder="Empresa" class="form-control" required=""></select>
+            </div>
+
+            <div class="form-group">
+              <label for="idInventario" control-label">Equipo</label>
+             <select  id="idInventario" name="idInventario" class="form-control" required=""></select>
+            </div>
+
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Agregar usuario</button>
+              </div>
+          </form>
+    </div>
+
+    <div class="col-md-10">
+        <fieldset>
+        <legend> Usuarios</legend>
+          <div class="scroll">
+            <input type="text" class="form-control input-sm m-b-xs" id="filter" placeholder="Buscar ...">
+              <table class="footable table table-stripped" data-filter="#filter" data-page-size="5" id="informacion">
+                <thead>
+                  <tr>
+                   <th nowrap>Nombre</th>
+                   <th nowrap>Extención</th>
+                   <th nowrap>Email</th>
+                   <th nowrap>Contraseña Email</th>
+                   <th nowrap>Empresa</th>
+                   <th nowrap>Equipo</th>
+                   <th nowrap>Opciones</th>
+                  </tr>
+                </thead>
+                <tbody class="Table">
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="11">
+                      <ul class="pagination pull-right"></ul>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+        </fieldset>
+     </div>
+  </div>
+
+ <!--ACTUALIZAR USUARIO-->
+  <div class="modal inmodal" id="editUser" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content animated bounceIn">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title">Actualizar registro de Inventario</h4>
+        </div>
+          <div class="modal-body">
+            <form action="/upUsuario" method="post" name="info_form">
+                    <div class="controls">
+                        <div class="form-group">
+			              <label for="Nombre1" control-label">Nombre</label>
+			             <input type="text" id="Nombre1" name="Nombre" class="form-control" required="">
+			            </div>
+
+			             <div class="form-group">
+			              <label for="Extención1" control-label">Extención</label>
+			             <input type="text" id="Extención1" name="Extencion" class="form-control" required="">
+			            </div>
+
+			             <div class="form-group">
+			              <label for="Email1" control-label">Email</label>
+			             <input type="text" id="Email1" name="Email" class="form-control" required="">
+			            </div>
+
+			             <div class="form-group">
+			              <label for="PassEmail1" control-label">Contraseña email</label>
+			             <input type="text" id="PassEmail1" name="PassEmail" class="form-control" required="">
+			            </div>
+
+			             <div class="form-group">
+			              <label for="idCliente1" control-label">Empresa</label>
+			             <select type="text" id="idCliente1" name="idCliente" class="form-control" required=""></select>
+			            </div>
+
+			            <div class="form-group">
+			              <label for="idInventario1" control-label">Equipo</label>
+			             	<select id="idInventario1" name="idInventario" class="form-control" required=""></select>
+			            </div>
+                      <input type="hidden" id="id" name="idUsuario" class="form-control" required="">
+                    </div>
+                    <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary">Actualizar</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
 </div>
-
-	<% include ../views/Secciones/footer %>
-	<script>
+<% include ../views/Secciones/footer %>
 
 
-		$(document).ready(function(){
-			$("#item7").addClass("active");
-		});
-			</script>
-	
-	
+  <script>
+    $(document).ready(function(){
+      
+      $("#item7").addClass("active");
+
+      $.ajax({
+        url: "/infouS",
+        Type: "GET",
+        success: function(result){
+          if(result==0){
+              }else{
+
+                for (var i = 0; i <= result.length; i++) {
+                        // put select items here
+
+                          var row = $("<tr>");
+
+                        $('.Table').append(row); 
+                        row.append($("<td>" + result[i].Nombre + "</td>"));  
+                        row.append($("<td>" + result[i].Extención + "</td>"));
+                        row.append($("<td>" + result[i].Email + "</td>"));
+                        row.append($("<td>"+ result[i].PassEmail + "</td>"));
+                        row.append($("<td>"+ result[i].idCliente + "</td>"));
+                        row.append($("<td>"+ result[i].idInventario + "</td>"));
+                        row.append($("<td >" +" &nbsp; " + "<button onclick=editarUser("+result[i].idUsuario+") class='widget-icon'><i class='fa fa-edit text-navy'></i></button>" + " &nbsp; " + "<button class='widget-icon' id='Opcion2' onclick=delUser("+result[i].idUsuario+")><i class='fa fa-trash text-navy'></i></button>" + "</td>"));
+                        $('.footable').attr("data-page-size","5");
+                      }
+              }
+            }
+
+            });
+
+       $.ajax({
+        url: "/infoInv",
+        Type: "GET",
+        success: function(result){
+        	 for (var i = 0; i <= result.length; i++) {
+        	 $('#idInventario').append( '<option value="'+result[i].idInventario+'">'+result[i].NombreEquip+'</option>' );
+             $('#idInventario1').append( '<option value="'+result[i].idInventario+'">'+result[i].NombreEquip+'</option>' );
+         	}
+        }
+    });
+
+       $.ajax({
+        url: "/infoClients",
+        Type: "GET",
+        success: function(result){
+        	 for (var i = 0; i <= result.length; i++) {
+        	 $('#idCliente').append( '<option value="'+result[i].idCliente+'">'+result[i].Nombre+'</option>' );
+             $('#idCliente1').append( '<option value="'+result[i].idCliente+'">'+result[i].Nombre+'</option>' );
+         	}
+        }
+    });
+   });
+
+     function editarUser(id) {
+         $('#editUser').modal();
+         $.ajax({
+             url: "/editUser/" + id + "",
+             type: "GET",
+             success: function (result) {
+                 $('#Nombre1').val(result[0].Nombre);
+                 $('#Extención1').val(result[0].Extención);
+                 $('#Email1').val(result[0].Email);
+                 $('#PassEmail1').val(result[0].PassEmail);
+                 $('#idCliente1').val(result[0].idCliente);
+                 $('#idInventario1').val(result[0].idInventario);
+                 $('#id').val(result[0].idUsuario);
+             }, error: function (result) {
+
+             }
+
+         });
+     }
+
+      function delUser(id) {
+          swal({
+            title: "¿Estás seguro?",
+            text: "¡No podrás recuperar el registro!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Si, dale cuello!",
+            closeOnConfirm: false
+          }, function () {
+                swal("Eliminado!", "El registro ha sido eliminado.", "success", setTimeout(function() { 
+                  $.ajax({
+                 url: "/delUser/" + id + "",
+                 type: "GET",
+                 success: function (result) {
+                    if(result = "done"){
+                      location.reload();
+                    }else{
+                      alert("Ocurrio un error: "+ result);
+                    }
+                 }, error: function (result) {
+                    alert(result);
+                 }
+                  });
+
+                }, 1200));
+         });
+     }
+</script>
 </body>
 </html>

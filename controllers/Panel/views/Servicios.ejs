@@ -7,7 +7,7 @@
   <script>
       window.onload = function() {
         window.addEventListener('mousemove', function(){$('.footable').footable()});
-      };
+      }
     </script>
 </head>
 <body>
@@ -47,12 +47,12 @@
 
             <div class="form-group">
               <label for="Problema">Problema</label>
-              <input type="text" id="Problema" name="Problema" class="form-control" required="">
+              <input type="text" id="Problema" name="Problema" placeholder="Problema" class="form-control" required="">
             </div>
 
             <div class="form-group">
               <label for="Observaciones">Observaciones</label>
-              <input type="text" id="Observaciones" name="Observaciones" class="form-control" required="">
+              <input type="text" id="Observaciones" placeholder="Observaciones" name="Observaciones" class="form-control" required="">
             </div>
 
             <div class="form-group">
@@ -292,7 +292,7 @@
              success: function (result) {
                  $('#idTecnico1').val(result[0].idTécnico);
                  $('#idUsuario1').val(result[0].idUsuario);
-                 $('#idCliente1').val(result[0].idCliente);
+                 $('#idTipoServ1').val(result[0].idTipoServicio);
                  $('#Problema1').val(result[0].Problema);
                  $('#Observaciones1').val(result[0].Observaciones);
                  $('#Estado1').val(result[0].Estatus);
