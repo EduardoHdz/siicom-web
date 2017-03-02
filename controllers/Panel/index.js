@@ -104,6 +104,28 @@ app.get('/infoUser',login, function(req, res){
 		});
 });
 
+//============= SECCIÓN DE PERFIL ============================\\
+
+app.get('/settings/:id',login,function(req, res){
+	if(req.params.id == req.session.logged){
+		BD.query('SELECT * from Técnicos WHERE Email = ?',[req.params.id],
+			function(err, result){
+				res.render('profile',{title: "Perfíl",data:result});
+			});
+	}else{
+		res.redirect('/dashboard');
+	}
+});
+
+app.post('/upProfile', login, function(req, res){
+	if(req.body.Email == req.session.logged){
+		BD.query('UPDATE técnicos set Nombre = ?, Tel = ?, IDNextel = ? WHERE Email = ?', [req.body.Nombre, req.body.Tel, req.body.IDNextel, req.session.logged],
+			function(err, result){
+				res.redirect('/settings/'+req.session.logged);
+			});
+	}
+});
+
 //============= SECCIÓN DE CLIENTES ============================\\
 
 app.get('/infoClients', login, function(req, res){
@@ -299,30 +321,30 @@ app.get('/infouS', login, function(req, res){
 });
 
 app.post('/user',login,function(req, res){
-	BD.query("INSERT INTO usuarios (Nombre, Descripcion) VALUES (?,?)",[req.body.Nombre, req.body.Descripcion],
+	BD.query("INSERT INTO usuarios (Nombre, Extención, Email, PassEmail, idCliente, idInventario) VALUES (?,?,?,?,?,?)",[req.body.Nombre, req.body.Extencion, req.body.Email, req.body.PassEmail, req.body.idCliente, req.body.idInventario],
 		function(err, result){
 			if(!err){
-			res.redirect('/Tservices');
+			res.redirect('/user');
 			}
 		});
 });
 
-app.get('/editTipoServ/:id', login, function(req, res){
-	BD.query("SELECT * from tiposervicios WHERE idTipoServicio = ?",[req.params.id], function(err, result){
+app.get('/editUser/:id', login, function(req, res){
+	BD.query("SELECT * from usuarios WHERE idUsuario = ?",[req.params.id], function(err, result){
 		res.send(result);
 	});
 });
 
-app.post('/upTipoServ',login, function(req, res){
-	BD.query('UPDATE tiposervicios set Nombre = ?, Descripcion = ? WHERE idTipoServicio = ?',[req.body.Nombre, req.body.Descripcion, req.body.idTipoServicio],
+app.post('/upUsuario',login, function(req, res){
+	BD.query('UPDATE usuarios set Nombre = ?, Extención = ?, Email = ?, PassEmail = ?, idCliente = ?, idInventario = ? WHERE idUsuario = ?',[req.body.Nombre, req.body.Extencion, req.body.Email, req.body.PassEmail, req.body.idCliente, req.body.idInventario, req.body.idUsuario],
 		function(err, result){
-			res.redirect('/Tservices');
+			res.redirect('/user');
 		});
 
 });
 
-app.get('/delTipoServ/:id', login, function(req, res){
-	BD.query("DELETE from tiposervicios WHERE idTipoServicio = ?",[req.params.id], function(err, result){
+app.get('/delUser/:id', login, function(req, res){
+	BD.query("DELETE from usuarios WHERE idUsuario = ?",[req.params.id], function(err, result){
 		if(!err){
 			res.send("done");
 		}else{

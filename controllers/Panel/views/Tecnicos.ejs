@@ -17,7 +17,7 @@
    <div class="row wrapper border-bottom white-bg page-heading">
     <div class="row">
 			<div class="col-sm-12">
-        <h1 class="page-header">Técnicos</h1>
+        <h1 class="page-header">Información de técnicos</h1>
       </div>
 
       <div class="col-sm-12">
@@ -125,8 +125,8 @@
                               </div>
 
                               <div class="form-group">
-                                  <label for="UL">Nivel de usuario</label>
-                                 <SELECT class="form-control" id="UL" name="userLvl1" required="">
+                                  <label for="UL1">Nivel de usuario</label>
+                                 <SELECT class="form-control" id="UL1" name="userLvl1" required="">
                                   <option value="">Seleccione..</option>
                                   <option value="0"> Estandar </option>
                                   <option value="1"> Administrador </option>
@@ -194,7 +194,7 @@
                  $('#Tel1').val(result[0].Tel);
                  $('#ID-Nextel1').val(result[0].IDNextel);
                  $('#Puesto1').val(result[0].Puesto);
-                 $('#userLvl1').val(result[0].userLvl);
+                 $('#UL1').val(result[0].userLvl);
                  $('#id').val(result[0].idTécnico);
              }, error: function (result) {
 
@@ -243,7 +243,6 @@
 			            row.append($("<td>"+ result[i].Tel + "</td>"));
 			            row.append($("<td>"+ result[i].IDNextel + "</td>"));
                   row.append($("<td>"+ result[i].Puesto + "</td>"));
-			            row.append($("<td>"+ result[i].userLvl + "</td>"));
 			            row.append($("<td >" + " &nbsp; " + "<button onclick=editarT("+result[i].idTécnico+") class='widget-icon'><i class='fa fa-edit text-navy'></i></button>" + " &nbsp; " + "<button class='widget-icon' id='Opcion2' onclick=delTech("+result[i].idTécnico+")><i class='fa fa-trash text-navy'></i></button>" + "</td>"));
 			            $('.footable').attr("data-page-size","5");
                   		}

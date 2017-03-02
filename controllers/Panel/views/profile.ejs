@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<% include ../views/Secciones/head %>
+  <title>Profile settings</title>
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#sidebar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/dashboard"><img src="../img/siicomLogo.png" style="width: 120px; height: 30px; margin-top: -5px;"></a>
+        <ul class="user-menu">
+          <li class="dropdown pull-right">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><svg class="glyph stroked male-user"><use xlink:href="#stroked-male-user"></use></svg> <label id="name"><%=data[0].Nombre%></label> <span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="#"> &nbsp; &nbsp; &nbsp;  <span id="lvl"></span></a></li>
+              <li role="separator" class="divider"></li>
+              <li><a href="#"><svg class="glyph stroked gear"><use xlink:href="#stroked-gear"></use></svg> Configuración</a></li>
+              <li><a href="/salir"><svg class="glyph stroked cancel"><use xlink:href="#stroked-cancel"></use></svg> Logout</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>  
+    </div><!-- /.container-fluid -->
+  </nav>
+  <script>
+    
+    $.ajax({
+      url: "/infoUser",
+      type: "GET",
+      success: function(res){
+        $("#name").html(res[0].Nombre);
+        $("#setting").attr("href", "/settings/"+res[0].Email);
+        if(res[0].userLvl == 1){
+          $("#lvl").html("Administrador");
+          $("#item3").show();
+        }else{
+          $("#lvl").html("Estandar");
+        }
+      }
+    });
+  </script>
+</head>
+<body>
+  
+  <div class="container" style="padding-top: 60px;">
+  <h1 class="page-header">Configurar perfil</h1>
+  <div class="row">
+    <!-- left column -->
+    <div class="col-md-4 col-sm-6 col-xs-12">
+      <div class="text-center">
+        <img src="http://lorempixel.com/200/200/people/9/" class="avatar img-circle img-thumbnail" alt="avatar">
+        <h6>Upload a different photo...</h6>
+        <input type="file" class="text-center center-block well well-sm">
+      </div>
+    </div>
+    <!-- edit form column -->
+    <div class="col-md-8 col-sm-6 col-xs-12 personal-info">
+      <div class="alert alert-info alert-dismissable">
+        <a class="panel-close close" data-dismiss="alert">×</a> 
+        <i class="fa fa-coffee"></i>
+          Si desea cambiar la contraseña contacte al administrador.
+      </div>
+      <h3>Información de perfil</h3>
+      <form class="form-horizontal" action="/upProfile" method="post" role="form">
+        <div class="form-group">
+          <label class="col-lg-3 control-label">Nombre:</label>
+          <div class="col-lg-8">
+            <input class="form-control" name="Nombre" value="<%=data[0].Nombre%>" type="text">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-lg-3 control-label">Teléfono</label>
+          <div class="col-lg-8">
+            <input class="form-control" name="Tel" value="<%=data[0].Tel%>" type="text">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-lg-3 control-label">Email:</label>
+          <div class="col-lg-8">
+            <input class="form-control" name="Email" value="<%=data[0].Email%>"" type="text" readonly>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-md-3 control-label">ID Nextel</label>
+          <div class="col-md-8">
+            <input class="form-control" name="IDNextel" value="<%=data[0].IDNextel%>" type="text">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-md-3 control-label"></label>
+          <div class="col-md-8">
+            <input class="btn btn-primary" value="Guardar cambios" type="submit">
+            <span></span>
+            <button class="btn btn-default"> <a href="/dashboard"> Regresar </a></button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<% include ../views/Secciones/footer %>
+
+</body>
+</html>
