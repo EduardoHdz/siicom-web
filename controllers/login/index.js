@@ -2,6 +2,21 @@ var express = require('express');
 var mysql = require('mysql');
 var app = module.exports = express();
 
+var crypto = require('crypto'),
+        algorithm = 'aes-256-ctr',
+        password = 'd6F3Efeq';
+
+        //Encrypt incoming data 
+    function encrypt(text){
+          var cipher = crypto.createCipher(algorithm,password)
+          var crypted = cipher.update(text,'utf8','hex')
+          crypted += cipher.final('hex');
+      return crypted;
+    }
+     
+
+
+
 app.set('views', __dirname + '/views');
 
 function conexionBD(){ // Create database conection
@@ -30,8 +45,8 @@ app.get('/login', function(req, res) {
 
 app.post('/login', function(req, res){
 	var user = req.body.txtUser;
-	var pass = req.body.txtPass;
-	BD.query('SELECT Email, Password from usuarios WHERE Email = ? AND Password = ?',[user, pass],
+	var pass = encrypt(req.body.txtPass);
+	BD.query('SELECT Email, Password from técnicos WHERE Email = ? AND Password = ?',[user, pass],
 		function(error, result, row){
 			if(!error){
 				if(result.length>0){
