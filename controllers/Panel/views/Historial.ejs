@@ -1,30 +1,234 @@
-<!DOCTYPE html>
-<html>
+<<!DOCTYPE html>
+<html lang="es">
 <head>
 <% include ../views/Secciones/head %>
 	<title><%=title%></title>
+	<% include ../views/Secciones/header %>
+  <script>
+      window.onload = function() {
+        window.addEventListener('mousemove', function(){$('.footable').footable()});
+      }
+    </script>
 </head>
 <body>
 <% include ../views/Secciones/menu %>
-<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
+<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">	
 
-<div class="row">
-			<div class="col-lg-12">
-				<h1 class="page-header">Historial</h1>
+  <div class="row wrapper border-bottom white-bg page-heading">
+    <div class="row">
+			<div class="col-sm-12">
+        <h1 class="page-header">Información de historial</h1>
+      </div>
+		</div><!--/.row-->
+    </div>
+
+  <div class="ibox-content">
+     <div class="col-md-2">
+          <form action="/record" method="post" class="form-horizontal">
+            
+			<div class="form-group">
+			  <label for="Empresa" control-label">Empresa</label>
+			  <select type="text" id="Empresa" name="Empresa" placeholder="Empresa" class="form-control" required=""></select> 
 			</div>
-		</div><!--/.row-->	
-	
 
+			<div class="form-group">
+				<label for="Usuario" control-label">Usuario</label>
+				<select type="text" id="Usuario" name="Usuario" placeholder="Usuario" class="form-control" required=""></select> 
+		 	</div>
+             <div class="form-group">
+              <label for="EquipoV" control-label">Equipo viejo</label>
+             <input type="text" id="EquipoV" name="EquipoV" placeholder="Equipo viejo" class="form-control" required="">
+            </div>
+
+             <div class="form-group">
+              <label for="EquipoN" control-label">Equipo nuevo</label>
+             <input type="text" id="EquipoN" name="EquipoN" placeholder="Equipo nuevo" class="form-control" required="">
+            </div>
+
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Registrar</button>
+              </div>
+          </form>
+    </div>
+
+    <div class="col-md-10">
+        <fieldset>
+        <legend> Historial</legend>
+          <div class="scroll">
+            <input type="text" class="form-control input-sm m-b-xs" id="filter" placeholder="Buscar ...">
+              <table class="footable table table-stripped" data-filter="#filter" data-page-size="5" id="informacion">
+                <thead>
+                  <tr>
+                   <th nowrap>ID Historial</th>
+                   <th nowrap>Empresa</th>
+                   <th nowrap>Usuario</th>
+                   <th nowrap>Equipo viejo</th>
+                   <th nowrap>Equipo nuevo</th>
+                   <th nowrap>Fecha</th>
+                   <th nowrap>Opciones</th>
+                  </tr>
+                </thead>
+                <tbody class="Table">
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="11">
+                      <ul class="pagination pull-right"></ul>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+        </fieldset>
+     </div>
+  </div>
+
+ <!--ACTUALIZAR HISTORIAL-->
+  <div class="modal inmodal" id="editHist" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content animated bounceIn">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title">Actualizar registro de historial</h4>
+        </div>
+          <div class="modal-body">
+            <form action="/upHis" method="post" name="info_form">
+                    <div class="controls">
+                           <div class="form-group">
+				              <label for="Empresa1" control-label">Empresa</label>
+				             <select type="text" id="Empresa1" name="Empresa" placeholder="Empresa" class="form-control" required=""></select> 
+				            </div>
+
+				             <div class="form-group">
+				              <label for="Usuario1" control-label">Usuario</label>
+				             <select type="text" id="Usuario1" name="Usuario" placeholder="Usuario" class="form-control" required=""></select> 
+				            </div>
+
+				             <div class="form-group">
+				              <label for="EquipoV1" control-label">Equipo viejo</label>
+				             <input type="text" id="EquipoV1" name="EquipoV" placeholder="Equipo viejo" class="form-control" required="">
+				            </div>
+
+				             <div class="form-group">
+				              <label for="EquipoN1" control-label">Equipo nuevo</label>
+				             <input type="text" id="EquipoN1" name="EquipoN" placeholder="Equipo nuevo" class="form-control" required="">
+				            </div>
+                      <input type="hidden" id="id" name="idHistorial" class="form-control" required="">
+                    </div>
+                    <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary">Actualizar</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
 </div>
-
-	<% include ../views/Secciones/footer %>
-	<script>
+<% include ../views/Secciones/footer %>
 
 
-		$(document).ready(function(){
-			$("#item5").addClass("active");
-		});
-			</script>
-	
+  <script>
+    $(document).ready(function(){
+      
+      $("#item5").addClass("active");
+
+      $.ajax({
+        url: "/infoH",
+        Type: "GET",
+        success: function(result){
+          if(result==0){
+              }else{
+
+                for (var i = 0; i <= result.length; i++) {
+                        // put select items here
+
+                          var row = $("<tr>");
+
+                        $('.Table').append(row); 
+                        row.append($("<td>" + result[i].idHistorial + "</td>"));  
+                        row.append($("<td>" + result[i].idCliente + "</td>"));  
+                        row.append($("<td>" + result[i].idUsuario + "</td>"));
+                        row.append($("<td>" + result[i].EquipoV + "</td>"));
+                        row.append($("<td>"+ result[i].EquipoN + "</td>"));
+                        row.append($("<td>"+ result[i].Fecha + "</td>"));
+                        row.append($("<td >" +" &nbsp; " + "<button onclick=editarHis("+result[i].idHistorial+") class='widget-icon'><i class='fa fa-edit text-navy'></i></button>" + " &nbsp; " + "<button class='widget-icon' id='Opcion2' onclick=delHis("+result[i].idHistorial+")><i class='fa fa-trash text-navy'></i></button>" + "</td>"));
+                        $('.footable').attr("data-page-size","5");
+                      }
+              }
+            }
+
+            });
+
+
+       $.ajax({
+        url: "/infoClients",
+        Type: "GET",
+        success: function(result){
+        	 for (var i = 0; i <= result.length; i++) {
+        	 $('#Empresa').append( '<option value="'+result[i].idCliente+'">'+result[i].Nombre+'</option>' );
+             $('#Empresa1').append( '<option value="'+result[i].idCliente+'">'+result[i].Nombre+'</option>' );
+         	}
+        }
+    });
+
+       $.ajax({
+              url: "/infouS",
+              Type: "GET",
+              success: function(result){
+                      for (var i = 0; i <= result.length; i++) {
+                        $('#Usuario').append( '<option value="'+result[i].idUsuario+'">'+result[i].Nombre+'</option>' );
+                        $('#Usuario1').append( '<option value="'+result[i].idUsuario+'">'+result[i].Nombre+'</option>' );
+                      }
+                   }
+                });
+   });
+
+     function editarHis(id) {
+         $('#editHist').modal();
+         $.ajax({
+             url: "/editHis/" + id + "",
+             type: "GET",
+             success: function (result) {
+                 $('#Empresa1').val(result[0].idCliente);
+                 $('#Usuario1').val(result[0].idUsuario);
+                 $('#EquipoV1').val(result[0].EquipoV);
+                 $('#EquipoN1').val(result[0].EquipoN);
+                 $('#id').val(result[0].idHistorial);
+             }, error: function (result) {
+
+             }
+
+         });
+     }
+
+      function delHis(id) {
+          swal({
+            title: "¿Estás seguro?",
+            text: "¡No podrás recuperar el registro!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Si, dale cuello!",
+            closeOnConfirm: false
+          }, function () {
+                swal("Eliminado!", "El registro ha sido eliminado.", "success", setTimeout(function() { 
+                  $.ajax({
+                 url: "/delHis/" + id + "",
+                 type: "GET",
+                 success: function (result) {
+                    if(result = "done"){
+                      location.reload();
+                    }else{
+                      alert("Ocurrio un error: "+ result);
+                    }
+                 }, error: function (result) {
+                    alert(result);
+                 }
+                  });
+
+                }, 1200));
+         });
+     }
+</script>
 </body>
 </html>

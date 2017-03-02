@@ -106,10 +106,6 @@
                                  <label for="Email">Email</label>
                                   <input type="email" class="form-control" id="Email1" name="Email" placeholder="example@example.com" required="" >
                               </div>
-                               <div class="form-group">
-                                 <label for="Nombre">Password</label>
-                                  <input type="password" class="form-control" id="Password1" name="Password" placeholder="Password" required="" >
-                              </div>
                               <div class="form-group">
                                   <label for="Tel">Tel</label>
                                   <input type="text" class="form-control" id="Tel1" name="Tel" placeholder="Télefono" required="" >
@@ -155,7 +151,6 @@
                    <th nowrap>ID Técnico</th>
                    <th nowrap>Nombre</th>
                    <th nowrap>Email</th>
-                   <th nowrap>Password</th>
                    <th nowrap>Teléfono</th>
                    <th nowrap>ID-Nextel</th>
                    <th nowrap>Puesto</th>
@@ -190,7 +185,6 @@
              success: function (result) {
                  $('#Nombre1').val(result[0].Nombre);
                  $('#Email1').val(result[0].Email);
-                 $('#Password1').val(result[0].Password);
                  $('#Tel1').val(result[0].Tel);
                  $('#ID-Nextel1').val(result[0].IDNextel);
                  $('#Puesto1').val(result[0].Puesto);
@@ -221,6 +215,26 @@
 
          });
      }
+
+     function correo(mail) {
+          var to=mail;      
+            //alert("Enviando Email... porfavor espere.");
+             $.ajax({
+             url: "/send/" + to + "",
+             type: "GET",
+             success: function (result) {
+                if(result=="sent")
+            {
+              swal("El mensaje se ha sido enviado.", "la contraseña fue enviada a "+to+".", "success", setTimeout(function() { 
+                }, 1200));
+            }
+             }, error: function (result) {
+                alert(result);
+             }
+
+         });
+      }
+
 		$(document).ready(function(){
 			$("#item3").addClass("active");
 
@@ -232,20 +246,17 @@
 			        }else{
 
 			          for (var i = 0; i <= result.length; i++) {
-
 			          	var row = $("<tr>")
-
 			            $('.Table').append(row); 
 			            row.append($("<td>" + result[i].idTécnico + "</td>"));
                   row.append($("<td>" + result[i].Nombre + "</td>"));
                   row.append($("<td>" + result[i].Email + "</td>"));
-			            row.append($("<td>" + result[i].Password + "</td>"));
 			            row.append($("<td>"+ result[i].Tel + "</td>"));
 			            row.append($("<td>"+ result[i].IDNextel + "</td>"));
                   row.append($("<td>"+ result[i].Puesto + "</td>"));
-			            row.append($("<td >" + " &nbsp; " + "<button onclick=editarT("+result[i].idTécnico+") class='widget-icon'><i class='fa fa-edit text-navy'></i></button>" + " &nbsp; " + "<button class='widget-icon' id='Opcion2' onclick=delTech("+result[i].idTécnico+")><i class='fa fa-trash text-navy'></i></button>" + "</td>"));
+			            row.append($("<td >" + "<button onclick=correo("+'"'+result[i].Email+'"'+") class='widget-icon'><i class='fa fa-send text-navy'></i></button>" +" &nbsp; " + "<button onclick=editarT("+result[i].idTécnico+") class='widget-icon'><i class='fa fa-edit text-navy'></i></button>" + " &nbsp; " + "<button class='widget-icon' onclick=delTech("+result[i].idTécnico+")><i class='fa fa-trash text-navy'></i></button>" + "</td>"));
 			            $('.footable').attr("data-page-size","5");
-                  		}
+                  }
 			        }
 		        }
 		    });

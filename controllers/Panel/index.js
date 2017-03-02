@@ -1,9 +1,12 @@
 var express = require('express');
 var mysql = require('mysql');
-var app = module.exports = express();
+const nodemailer = require("nodemailer");
+var busboy = require('connect-busboy');
+var fs = require('fs');
 var crypto = require('crypto'),
         algorithm = 'aes-256-ctr',
         password = 'd6F3Efeq';
+var app = module.exports = express();
 
         //Encrypt incoming data 
     function encrypt(text){
@@ -104,6 +107,46 @@ app.get('/infoUser',login, function(req, res){
 		});
 });
 
+//============= SECCIÓN EMAIL ============================\\
+
+ let smtpTransport = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: "desarrollo.siicom@gmail.com",
+            pass: "siicom*2017"
+        }
+    });
+
+ var rand, mailOptions, host, link;
+    /// email verification request
+    app.get('/send/:id',function(req,res){
+        host=req.get('host'); //remplace ip address to 'host' to make it universal
+        //link="http://"+req.get('host')+"/verify?id="+rand+"&mail="+req.query.to;
+        link="http://"+"10.150.193.14:3000"+"/login";
+        var mail = req.params.id;
+
+        BD.query('SELECT Nombre, Password FROM técnicos WHERE Email = ?',[mail], function(err, result){
+        	var contra = decrypt(result[0].Password);
+        	mailOptions={
+        	from: '"SIICOM-MX" <desarrollo.siicom@gmail.com>',
+            to : mail,
+            subject : "[SIICOM-MEX] Password.",
+            html : "Hola "+result[0].Nombre+",<br>La contraseña de acceso para esta cuenta ha sido enviada.<br>Su contraseña es: &nbsp; "+contra+" <br><a href="+link+">Logearse en la plataforma.</a>" 
+	        }
+	        console.log(mailOptions); // Show details of mailOptions in console
+	        smtpTransport.sendMail(mailOptions, function(error, response){
+	         if(error){
+	         	console.log(error);
+	            res.end("error");
+	         }else{
+	            res.end("sent");
+	             }
+	         });
+
+        });
+        
+    });
+
 //============= SECCIÓN DE PERFIL ============================\\
 
 app.get('/settings/:id',login,function(req, res){
@@ -125,6 +168,30 @@ app.post('/upProfile', login, function(req, res){
 			});
 	}
 });
+/*
+app.post('/photoUsers', login, function(req, res){
+                     var fstream;
+                     var path;
+                     var ID;
+                     req.pipe(req.busboy);
+                     req.busboy.on('file', function (fieldname, file, filename) {
+                         ID = fieldname;
+                         if(filename.includes('.jpg') || filename.includes('.jpeg') || filename.includes('.png') || filename.includes('.JPG') || filename.includes('.JPEG') || filename.includes('.PNG')){
+                            fstream = fs.createWriteStream(__dirname + '/uploads/photo_users/'+ID+'-'+filename);
+                            path = './uploads/photo_users/'+ ID+'-'+filename;
+                            file.pipe(fstream);
+                            fstream.on('close', function () {
+                                objBD.query('UPDATE users set user_imagen = ? WHERE user_id = ?',[path, ID],
+                                    function( error, result){
+                                    res.redirect('/signup');
+                                    });
+                                });
+                                }else{
+                                    res.send("Archivo no soportado<br> <h4><a href='/signup'>Regresar</a></h4>");
+                                 }
+                        });
+     });
+     */
 
 //============= SECCIÓN DE CLIENTES ============================\\
 
@@ -195,7 +262,7 @@ app.get('/editTech/:id', login, function(req, res){
 });
 
 app.post('/upTech',login, function(req, res){
-	BD.query('UPDATE técnicos set Nombre = ?, Tel = ?, IDNextel = ?, Puesto = ? WHERE idTécnico = ?',[req.body.Nombre, req.body.Tel, req.body.IDNextel, req.body.Puesto, req.body.idTécnico],
+	BD.query('UPDATE técnicos set Nombre = ?, Tel = ?, Email, IDNextel = ?, Puesto = ? WHERE idTécnico = ?',[req.body.Nombre, req.body.Tel, req.body.Email, req.body.IDNextel, req.body.Puesto, req.body.idTécnico],
 		function(err, result){
 			res.redirect('/technical');
 		});
@@ -254,14 +321,17 @@ app.get('/delTipoServ/:id', login, function(req, res){
 
 //============= SECCIÓN DE SERVICIO ============================\\
 
+// SELECT b.idBebedero idBebedero, cor.Nombre idCorral, b.Capacidad Capacidad, b.Nombre Nombre, b.Descripcion Descripcion from bebedero b LEFT JOIN corral cor ON b.idCorral = cor.idCorral 
+
 app.get('/infoS', login, function(req, res){
-	BD.query('SELECT *, DATE_FORMAT(Fecha, "%d/%m/%Y") Fecha from servicios WHERE stats = 1', function(err, result){
+	//BD.query('SELECT *, DATE_FORMAT(Fecha, "%d/%m/%Y") Fecha from servicios WHERE stats = 1', function(err, result){
+		BD.query('SELECT s.idServicio idServicio, ts.Nombre idTipoServicio, t.Nombre idTécnico, u.Nombre idUsuario , s.Problema Problema, s.Observaciones Observaciones, s.Estatus Estatus, DATE_FORMAT(Fecha, "%d/%m/%Y") Fecha from servicios s LEFT JOIN tiposervicios ts ON s.idTipoServicio = ts.idTipoServicio LEFT JOIN técnicos t ON s.idTécnico = t.idTécnico LEFT JOIN usuarios u ON s.idUsuario = u.idUsuario WHERE stats = 1', function(err, result){
 		res.send(result);
 	});
 });
 
 app.get('/infoSD', login, function(req, res){
-	BD.query('SELECT *, DATE_FORMAT(Fecha, "%d/%m/%Y") Fecha from servdone ORDER BY idServDone DESC', function(err, result){
+	BD.query('SELECT sd.idServDone, sd.idServicio, s.Problema, s.Observaciones, s.Estatus , DATE_FORMAT(sd.Fecha, "%d/%m/%Y") Fecha from servdone sd LEFT JOIN servicios s ON sd.idServicio = s.idServicio ORDER BY sd.idServDone DESC', function(err, result){
 		res.send(result);
 	});
 });
@@ -315,7 +385,7 @@ app.get('/delServ/:id', login, function(req, res){
 
  //============= SECCIÓN DE Usuarios ============================ PENDIENTE \\ 
 app.get('/infouS', login, function(req, res){
-	BD.query("SELECT * from usuarios", function(err, result){
+	BD.query("SELECT u.idUsuario idUsuario, u.Nombre Nombre, u.Extención Extención, u.Email Email, u.PassEmail PassEmail, c.Nombre idCliente, i.NombreEquip idInventario from usuarios u LEFT JOIN clientes c ON u.idCliente = c.idCliente LEFT JOIN inventario i ON u.idInventario = i.idInventario", function(err, result){
 		res.send(result);
 	});
 });
@@ -393,8 +463,49 @@ app.get('/delInv/:id', login, function(req, res){
 	});
 });
 
+ //============= SECCIÓN DE HISTORIAL ============================\\
+app.get('/infoH', login, function(req, res){
+	BD.query('SELECT h.idHistorial idHistorial, c.Nombre idCliente, u.Nombre idUsuario, h.EquipoV, h.EquipoN, DATE_FORMAT(h.Fecha, "%d/%m/%Y") Fecha from historial h LEFT JOIN clientes c ON h.idCliente = c.idCliente LEFT JOIN usuarios u ON h.idUsuario = u.idUsuario', function(err, result){
+		res.send(result);
+	});
+});
 
+app.post('/record',login,function(req, res){
+	BD.query('INSERT INTO historial (idCliente, idUsuario, EquipoV, EquipoN, Fecha) VALUES (?,?,?,?,NOW())',[req.body.Empresa, req.body.Usuario, req.body.EquipoV, req.body.EquipoN],
+		function(err, result){
+			console.log(err);
+			console.log(result);
+			if(!err){
+			res.redirect('/record');
+			}
+		});
+});
 
+app.get('/editHis/:id', login, function(req, res){
+	BD.query("SELECT * from historial WHERE idHistorial = ?",[req.params.id], function(err, result){
+		res.send(result);
+	});
+});
+
+app.post('/upHis',login, function(req, res){
+	BD.query('UPDATE historial set idCliente = ?, idUsuario = ?, EquipoV = ?, EquipoN = ? WHERE idHistorial = ?',[req.body.Empresa, req.body.Usuario, req.body.EquipoV, req.body.EquipoN, req.body.idHistorial],
+		function(err, result){
+			res.redirect('/record');
+		});
+
+});
+
+app.get('/delHis/:id', login, function(req, res){
+	BD.query("DELETE from historial WHERE idHistorial = ?",[req.params.id], function(err, result){
+		if(!err){
+			res.send("done");
+		}else{
+			res.send(err);
+		}
+	});
+});
+
+ //============= ERROR 404 NOT FOUND ============================\\
 app.use(function(req, res, next) { 
  res.status(404).render('404', { url: req.url });
 });

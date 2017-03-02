@@ -77,9 +77,9 @@
                 <thead>
                   <tr>
                    <th nowrap>ID Servicio</th>
-                   <th nowrap>ID Tipo servicio</th>
-                   <th nowrap>ID Técnico</th>
-                   <th nowrap>ID Usuario</th>
+                   <th nowrap>Tipo servicio</th>
+                   <th nowrap>Técnico</th>
+                   <th nowrap>Usuario</th>
                    <th nowrap>Problema</th>
                    <th nowrap>Observaciones</th>
                    <th nowrap>Estado</th>
@@ -111,6 +111,9 @@
                   <tr>
                    <th nowrap>ID </th>
                    <th nowrap>ID Servicio</th>
+                   <th nowrap>Problema</th>
+                   <th nowrap>Observaciones</th>
+                   <th nowrap>Estado</th>
                    <th nowrap>Fecha</th>
                   </tr>
                 </thead>
@@ -239,7 +242,10 @@
 
                         $('.Table2').append(row); 
                         row.append($("<td>" + result[i].idServDone + "</td>"));
-                        row.append($("<td>" + result[i].idServicio + "</td>"));  
+                        row.append($("<td>" + result[i].idServicio + "</td>")); 
+                        row.append($("<td>" + result[i].Problema + "</td>")); 
+                        row.append($("<td>" + result[i].Observaciones + "</td>")); 
+                        row.append($("<td>" + result[i].Estatus + "</td>"));  
                         row.append($("<td>" + result[i].Fecha + "</td>"));
                         $('.footable').attr("data-page-size","5");
                   		}
