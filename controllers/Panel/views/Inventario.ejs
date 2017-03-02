@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<% include ../views/Secciones/head %>
+	<title><%=title%></title>
+	<% include ../views/Secciones/header %>
+  <script>
+      window.onload = function() {
+        window.addEventListener('mousemove', function(){$('.footable').footable()});
+      };
+    </script>
+</head>
+<body>
+<% include ../views/Secciones/menu %>
+<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">	
+
+  <div class="row wrapper border-bottom white-bg page-heading">
+    <div class="row">
+			<div class="col-sm-12">
+        <h1 class="page-header">Realizar servicio</h1>
+      </div>
+		</div><!--/.row-->
+    </div>
+
+
+  <div class="ibox-content">
+     <div class="col-md-2">
+          <form action="/inventario" method="post" class="form-horizontal">
+
+            <div class="form-group">
+              <label for="Usuario" control-label">Usuario</label>
+             <input type="text" id="Usuario" name="Usuario" class="form-control" required="">
+            </div>
+
+             <div class="form-group">
+              <label for="PassEquip" control-label">Contraseña equipo</label>
+             <input type="text" id="PassEquip" name="PassEquip" class="form-control" required="">
+            </div>
+
+             <div class="form-group">
+              <label for="NombreEquip" control-label">Nombre equipo</label>
+             <input type="text" id="NombreEquip" name="NombreEquip" class="form-control" required="">
+            </div>
+
+             <div class="form-group">
+              <label for="MAC" control-label">MAC</label>
+             <input type="text" id="MAC" name="MAC" class="form-control" required="">
+            </div>
+
+             <div class="form-group">
+              <label for="IPEquip" control-label">IP Equipo</label>
+             <input type="text" id="IPEquip" name="IPEquip" class="form-control" required="">
+            </div>
+
+             <div class="form-group">
+              <label for="SO" control-label">Sistema operativo</label>
+             <input type="text" id="SO" name="SO" class="form-control" required="">
+            </div>
+
+             <div class="form-group">
+              <label for="Marca" control-label">Marca</label>
+             <input type="text" id="Marca" name="Marca" class="form-control" required="">
+            </div>
+
+             <div class="form-group">
+              <label for="Modelo" control-label">Modelo</label>
+             <input type="text" id="Modelo" name="Modelo" class="form-control" required="">
+            </div>
+
+             <div class="form-group">
+              <label for="Procesador" control-label">Procesador</label>
+             <input type="text" id="Procesador" name="Procesador" class="form-control" required="">
+            </div>
+
+             <div class="form-group">
+              <label for="RAM" control-label">Cantidad de RAM</label>
+             <input type="text" id="RAM" name="RAM" class="form-control" required="">
+            </div>
+
+             <div class="form-group">
+              <label for="HDD" control-label">Cantidad de HDD</label>
+             <input type="text" id="HDD" name="HDD" class="form-control" required="">
+            </div>
+
+            <div class="form-group">
+            <label for="Estado" control-label"> Estado</label>
+             <select id="Estado" name="Estado" class="form-control" required="">
+                          <option value=""> Seleccione...</option>
+
+                <option value="Malo"> Malo</option>
+                <option value="Regular"> Regular</option>
+                <option value="Bueno"> Bueno</option>
+                <option value="Excelente"> Excelente</option>
+             </select>
+            </div>
+             
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Agregar al inventario</button>
+              </div>
+          </form>
+    </div>
+
+    <div class="col-md-10">
+        <fieldset>
+        <legend> Registros en inventario</legend>
+          <div class="scroll">
+            <input type="text" class="form-control input-sm m-b-xs" id="filter" placeholder="Buscar ...">
+              <table class="footable table table-stripped" data-filter="#filter" data-page-size="5" id="informacion">
+                <thead>
+                  <tr>
+                   <th nowrap>ID Inventario</th>
+                   <th nowrap>Usuario</th>
+                   <th nowrap>Contraseña equipo</th>
+                   <th nowrap>Nombre Equipo</th>
+                   <th nowrap>MAC</th>
+                   <th nowrap>IP Equipo</th>
+                   <th nowrap>S.O.</th>
+                   <th nowrap>Marca</th>
+                   <th nowrap>Modelo</th>
+                   <th nowrap>Procesador</th>
+                   <th nowrap>RAM</th>
+                   <th nowrap>HDD</th>
+                   <th nowrap>Estado</th>
+                   <th nowrap>Opciones</th>
+                  </tr>
+                </thead>
+                <tbody class="Table">
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="11">
+                      <ul class="pagination pull-right"></ul>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+        </fieldset>
+     </div>
+  </div>
+
+ <!--ACTUALIZAR INVENTARIO-->
+  <div class="modal inmodal" id="editServ" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content animated bounceIn">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title">Actualizar registro de Inventario</h4>
+        </div>
+          <div class="modal-body">
+            <form action="/upInv" method="post" name="info_form">
+                    <div class="controls">
+                         <div class="form-group">
+                        <label for="Usuario1" control-label">Usuario</label>
+                       <input type="text" id="Usuario1" name="Usuario" class="form-control" required="">
+                      </div>
+
+                       <div class="form-group">
+                        <label for="PassEquip1" control-label">Contraseña equipo</label>
+                       <input type="text" id="PassEquip1" name="PassEquip" class="form-control" required="">
+                      </div>
+
+                       <div class="form-group">
+                        <label for="NombreEquip1" control-label">Nombre equipo</label>
+                       <input type="text" id="NombreEquip1" name="NombreEquip" class="form-control" required="">
+                      </div>
+
+                       <div class="form-group">
+                        <label for="MAC1" control-label">MAC</label>
+                       <input type="text" id="MAC1" name="MAC" class="form-control" required="">
+                      </div>
+
+                       <div class="form-group">
+                        <label for="IPEquip1" control-label">IP Equipo</label>
+                       <input type="text" id="IPEquip1" name="IPEquip" class="form-control" required="">
+                      </div>
+
+                       <div class="form-group">
+                        <label for="SO1" control-label">Sistema operativo</label>
+                       <input type="text" id="SO1" name="SO" class="form-control" required="">
+                      </div>
+
+                       <div class="form-group">
+                        <label for="Marca1" control-label">Marca</label>
+                       <input type="text" id="Marca1" name="Marca" class="form-control" required="">
+                      </div>
+
+                       <div class="form-group">
+                        <label for="Modelo1" control-label">Modelo</label>
+                       <input type="text" id="Modelo1" name="Modelo" class="form-control" required="">
+                      </div>
+
+                       <div class="form-group">
+                        <label for="Procesador1" control-label">Procesador</label>
+                       <input type="text" id="Procesador1" name="Procesador" class="form-control" required="">
+                      </div>
+
+                       <div class="form-group">
+                        <label for="RAM1" control-label">Cantidad de RAM</label>
+                       <input type="text" id="RAM1" name="RAM" class="form-control" required="">
+                      </div>
+
+                       <div class="form-group">
+                        <label for="HDD1" control-label">Cantidad de HDD</label>
+                       <input type="text" id="HDD1" name="HDD" class="form-control" required="">
+                      </div>
+
+                      <div class="form-group">
+                       <label for="Estado1" control-label"> Estado</label>
+                       <select id="Estado1" name="Estado" class="form-control" required="">
+                          <option value="Malo"> Malo</option>
+                          <option value="Regular"> Regular</option>
+                          <option value="Bueno"> Bueno</option>
+                          <option value="Excelente"> Excelente</option>
+                       </select>
+                      </div>
+                      <input type="hidden" id="id" name="idInventario" class="form-control" required="">
+                    </div>
+                    <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary">Actualizar</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+</div>
+<% include ../views/Secciones/footer %>
+
+
+  <script>
+    $(document).ready(function(){
+      
+      $("#item6").addClass("active");
+
+      $.ajax({
+        url: "/infoInv",
+        Type: "GET",
+        success: function(result){
+          if(result==0){
+              }else{
+
+                for (var i = 0; i <= result.length; i++) {
+                        // put select items here
+
+                          var row = $("<tr>");
+
+                        $('.Table').append(row); 
+                        row.append($("<td>" + result[i].idInventario + "</td>"));
+                        row.append($("<td>" + result[i].Usuario + "</td>"));  
+                        row.append($("<td>" + result[i].PassEquip + "</td>"));
+                        row.append($("<td>" + result[i].NombreEquip + "</td>"));
+                        row.append($("<td>"+ result[i].MAC + "</td>"));
+                        row.append($("<td>"+ result[i].IPEquip + "</td>"));
+                        row.append($("<td>"+ result[i].SO + "</td>"));
+                        row.append($("<td>" + result[i].Marca + "</td>"));
+                        row.append($("<td>" + result[i].Modelo + "</td>"));
+                        row.append($("<td>" + result[i].Procesador + "</td>"));
+                        row.append($("<td>" + result[i].RAM + " GB "+ "</td>"));
+                        row.append($("<td>" + result[i].HDD + " GB "+ "</td>"));
+                        row.append($("<td>" + result[i].Estado + "</td>"));
+                        row.append($("<td >" +" &nbsp; " + "<button onclick=editarInv("+result[i].idInventario+") class='widget-icon'><i class='fa fa-edit text-navy'></i></button>" + " &nbsp; " + "<button class='widget-icon' id='Opcion2' onclick=delInv("+result[i].idInventario+")><i class='fa fa-trash text-navy'></i></button>" + "</td>"));
+                        $('.footable').attr("data-page-size","5");
+                      }
+              }
+            }
+
+            });
+    });
+
+     function editarInv(id) {
+         $('#editServ').modal();
+         $.ajax({
+             url: "/editInventario/" + id + "",
+             type: "GET",
+             success: function (result) {
+                 $('#Usuario1').val(result[0].Usuario);
+                 $('#PassEquip1').val(result[0].PassEquip);
+                 $('#NombreEquip1').val(result[0].NombreEquip);
+                 $('#MAC1').val(result[0].MAC);
+                 $('#IPEquip1').val(result[0].IPEquip);
+                 $('#SO1').val(result[0].SO);
+                 $('#Marca1').val(result[0].Marca);
+                 $('#Modelo1').val(result[0].Modelo);
+                 $('#Procesador1').val(result[0].Procesador);
+                 $('#RAM1').val(result[0].RAM);
+                 $('#HDD1').val(result[0].HDD);
+                 $('#Estado1').val(result[0].Estado);
+                 $('#id').val(result[0].idInventario);
+             }, error: function (result) {
+
+             }
+
+         });
+     }
+
+      function delInv(id) {
+          swal({
+            title: "¿Estás seguro?",
+            text: "¡No podrás recuperar el registro!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Si, dale cuello!",
+            closeOnConfirm: false
+          }, function () {
+                swal("Eliminado!", "El registro ha sido eliminado.", "success", setTimeout(function() { 
+                  $.ajax({
+                 url: "/delInv/" + id + "",
+                 type: "GET",
+                 success: function (result) {
+                    if(result = "done"){
+                      location.reload();
+                    }else{
+                      alert("Ocurrio un error: "+ result);
+                    }
+                 }, error: function (result) {
+                    alert(result);
+                 }
+                  });
+
+                }, 1200));
+         });
+     }
+</script>
+</body>
+</html>

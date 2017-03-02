@@ -93,6 +93,10 @@ app.get('/user',login, function(req, res){
 	res.render('Usuarios',{title: "Usuarios"});
 });
 
+app.get('/inventario',login, function(req, res){
+	res.render('Inventario',{title: "Inventario"});
+});
+
 app.get('/infoUser',login, function(req, res){
 	BD.query("SELECT Nombre, Email, userLvl FROM técnicos WHERE Email = ?", [req.session.logged],
 		function(err, result){
@@ -287,7 +291,7 @@ app.get('/delServ/:id', login, function(req, res){
 	});
 });
 
- //============= SECCIÓN DE Usuarios ============================\\
+ //============= SECCIÓN DE Usuarios ============================ PENDIENTE \\ 
 app.get('/infouS', login, function(req, res){
 	BD.query("SELECT * from usuarios", function(err, result){
 		res.send(result);
@@ -319,6 +323,46 @@ app.post('/upTipoServ',login, function(req, res){
 
 app.get('/delTipoServ/:id', login, function(req, res){
 	BD.query("DELETE from tiposervicios WHERE idTipoServicio = ?",[req.params.id], function(err, result){
+		if(!err){
+			res.send("done");
+		}else{
+			res.send(err);
+		}
+	});
+});
+
+//============= SECCIÓN DE INVENTARIO ============================\\
+app.get('/infoInv', login, function(req, res){
+	BD.query("SELECT * from inventario", function(err, result){
+		res.send(result);
+	});
+});
+
+app.post('/inventario',login,function(req, res){
+	BD.query("INSERT INTO inventario (Usuario, PassEquip, NombreEquip, MAC, IPEquip, SO, Marca, Modelo, Procesador, RAM, HDD, Estado) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",[req.body.Usuario, req.body.PassEquip, req.body.NombreEquip, req.body.MAC, req.body.IPEquip, req.body.SO, req.body.Marca, req.body.Modelo, req.body.Procesador, req.body.RAM, req.body.HDD, req.body.Estado],
+		function(err, result){
+			if(!err){
+			res.redirect('/inventario');
+			}
+		});
+});
+
+app.get('/editInventario/:id', login, function(req, res){
+	BD.query("SELECT * from inventario WHERE idInventario = ?",[req.params.id], function(err, result){
+		res.send(result);
+	});
+});
+
+app.post('/upInv',login, function(req, res){
+	BD.query('UPDATE inventario set Usuario = ?, PassEquip = ?, NombreEquip = ?, MAC = ?, IPEquip = ?, SO = ?, Marca = ?, Modelo = ?, Procesador = ?, RAM = ?, HDD = ?, Estado = ? WHERE idInventario = ?',[req.body.Usuario, req.body.PassEquip, req.body.NombreEquip, req.body.MAC, req.body.IPEquip, req.body.SO, req.body.Marca, req.body.Modelo, req.body.Procesador, req.body.RAM, req.body.HDD, req.body.Estado, req.body.idInventario],
+		function(err, result){
+			res.redirect('/inventario');
+		});
+
+});
+
+app.get('/delInv/:id', login, function(req, res){
+	BD.query("DELETE from inventario WHERE idInventario = ?",[req.params.id], function(err, result){
 		if(!err){
 			res.send("done");
 		}else{
