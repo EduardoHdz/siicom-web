@@ -24,15 +24,13 @@
 	</nav>
 		
 	<div id="sidebar-collapse" style="background: rgb(230,230,230); opacity: 0.8;" class="col-sm-3 col-lg-2 sidebar">
-		<form role="search">
-			<div class="form-group">
-				
-			</div>
-		</form>
+		<div style="text-align: center;">
+			<label id="seccionMenu" style="font-size: 30px;"></label>
+		</div>
 		<ul class="nav menu">
 			<li id="item1" class=""><a href="/dashboard"><svg class="glyph stroked dashboard-dial"><use xlink:href="#stroked-dashboard-dial"></use></svg> Dashboard</a></li>
 			<li id="item2" class=""><a href="/client"><span class="glyphicon glyphicon-user"></span> Clientes</a></li>
-			<li id="item3" class=""><a href="/technical"><span class="glyphicon glyphicon-wrench"></span> Técnicos</a></li>
+			<li id="item3" style="display: none" class=""><a href="/technical"><span class="glyphicon glyphicon-wrench"></span> Técnicos</a></li>
 			<li class="parent ">
 				<a href="#">
 					<span data-toggle="collapse" href="#sub-item-1"><svg class="glyph stroked chevron down"><use xlink:href="#stroked-chevron-down"/></svg>Servicios</span> 
@@ -51,7 +49,7 @@
 				</ul>
 			</li>
 			<li id="item5" class=""><a href="/record"><span class="glyphicon glyphicon-book"></span> Historíal</a></li>
-			<li id="item6" style="display: none"  class=""><a href="/user"><span class="glyphicon glyphicon-saved"></span> Usuarios</a></li>
+			<li id="item6"  class=""><a href="/user"><span class="glyphicon glyphicon-saved"></span> Usuarios</a></li>
 	</div><!--/.sidebar-->
 
 	<script>
@@ -63,7 +61,7 @@
 				$("#name").html(res[0].Nombre);
 				if(res[0].userLvl == 1){
 					$("#lvl").html("Administrador");
-					$("#item6").show();
+					$("#item3").show();
 				}else{
 					$("#lvl").html("Estandar");
 				}

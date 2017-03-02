@@ -1,6 +1,25 @@
 var express = require('express');
 var mysql = require('mysql');
 var app = module.exports = express();
+var crypto = require('crypto'),
+        algorithm = 'aes-256-ctr',
+        password = 'd6F3Efeq';
+
+        //Encrypt incoming data 
+    function encrypt(text){
+          var cipher = crypto.createCipher(algorithm,password)
+          var crypted = cipher.update(text,'utf8','hex')
+          crypted += cipher.final('hex');
+      return crypted;
+    }
+     
+     //Decrypt incoming data
+    function decrypt(text){
+          var decipher = crypto.createDecipher(algorithm,password)
+          var dec = decipher.update(text,'hex','utf8')
+          dec += decipher.final('utf8');
+      return dec;
+    }
 
 app.set('views', __dirname + '/views');
 
@@ -26,7 +45,8 @@ function login(req, res, next) {
 }
 
 function admin(req, res, next) {
-	BD.query("SELECT userLvl FROM usuarios WHERE Email = ?", [req.session.logged],
+	if(req.session.logged){
+		BD.query("SELECT userLvl FROM técnicos WHERE Email = ?", [req.session.logged],
 		function(err, result){
 			if(result[0].userLvl == "1"){
 				next();
@@ -37,17 +57,10 @@ function admin(req, res, next) {
 				res.redirect('/login');
 			}
 		});
+	}else{
+		res.redirect('/login');
+	}
 }
-/*
-app.use(function(req, res, next){
-  res.status(404);
-  // respond with html page
-  if (req.accepts('html')) {
-    res.render('404', { url: req.url });
-    return;
-  }
-});
-*/
 
 
 app.get('/dashboard', login, function(req, res) {
@@ -60,7 +73,7 @@ app.get('/client', login, function(req, res){
 		res.render('clientes',{title:"Clientes"});
 });
 
-app.get('/technical',login, function(req, res){
+app.get('/technical',admin, function(req, res){
 	res.render('Tecnicos',{title: "Técnicos"});
 });
 
@@ -76,12 +89,12 @@ app.get('/record',login, function(req, res){
 	res.render('Historial',{title: "Historial"});
 });
 
-app.get('/user',admin, function(req, res){
+app.get('/user',login, function(req, res){
 	res.render('Usuarios',{title: "Usuarios"});
 });
 
 app.get('/infoUser',login, function(req, res){
-	BD.query("SELECT Nombre, Email, userLvl FROM usuarios WHERE Email = ?", [req.session.logged],
+	BD.query("SELECT Nombre, Email, userLvl FROM técnicos WHERE Email = ?", [req.session.logged],
 		function(err, result){
 			res.send(result);
 		});
@@ -137,8 +150,11 @@ app.get('/infoTech', login, function(req, res){
 });
 
 app.post('/technical',login,function(req, res){
-	BD.query("INSERT INTO técnicos (Nombre, Tel, IDNextel, Puesto) VALUES (?,?,?,?)",[req.body.Nombre, req.body.Tel, req.body.IDNextel, req.body.Puesto],
+	var pass = encrypt(req.body.Password);
+	BD.query("INSERT INTO técnicos (Nombre, Tel, Email, Password, IDNextel, Puesto, userLvl) VALUES (?,?,?,?,?,?,?)",[req.body.Nombre, req.body.Tel, req.body.Email, pass, req.body.IDNextel, req.body.Puesto, req.body.userLvl],
 		function(err, result){
+			console.log(err);
+			console.log(result);
 			if(!err){
 			res.redirect('/technical');
 			}
@@ -218,7 +234,7 @@ app.get('/infoS', login, function(req, res){
 });
 
 app.post('/Serv',login,function(req, res){
-	BD.query("INSERT INTO servicios (idTécnico, Problema, idUsuario, Observaciones, Estatus, idCliente) VALUES (?,?,?,?,?,?)",[req.body.idTecnico, req.body.Problema, req.body.idUsuario, req.body.Observaciones, req.body.Estatus, req.body.idCliente],
+	BD.query("INSERT INTO servicios (idTécnico, idTipoServicio, Problema, idUsuario, Observaciones, Estatus, idCliente) VALUES (?,?,?,?,?,?)",[req.body.idTecnico, req.body.idTipoServicio, req.body.Problema, req.body.idUsuario, req.body.Observaciones, req.body.Estatus, req.body.idCliente],
 		function(err, result){
 			console.log(err);
 			console.log(result);
@@ -235,14 +251,14 @@ app.get('/editServ/:id', login, function(req, res){
 });
 
 app.post('/upServ',login, function(req, res){
-	BD.query('UPDATE servicios set idTécnico = ?, Problema = ?, idUsuario = ?, Observaciones = ?, Estatus = ? WHERE idCliente = ?',[req.body.idTecnico, req.body.Problema, req.body.idUsuario, req.body.Observaciones, req.body.Estatus, req.body.idCliente],
+	BD.query('UPDATE servicios set idTécnico = ?, idTipoServicio = ?, Problema = ?, idUsuario = ?, Observaciones = ?, Estatus = ? WHERE idCliente = ?',[req.body.idTecnico, req.body.idTipoServicio, req.body.Problema, req.body.idUsuario, req.body.Observaciones, req.body.Estatus, req.body.idCliente],
 		function(err, result){
 			res.redirect('/services');
 		});
 });
 
-app.post('/ServDone/:id',login, function(req, res){
-	BD.query('UPDATE servicios set Estatus = ?',[3, req.params.id],
+app.get('/ServDone/:id',login, function(req, res){
+	BD.query('UPDATE servicios set Estatus = ? WHERE idServicio = ?',["Terminado", req.params.id],
 		function(err, result){
 			if(!err){
 			res.send("done");

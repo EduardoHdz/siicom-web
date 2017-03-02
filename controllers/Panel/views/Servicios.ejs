@@ -19,37 +19,42 @@
 
 
   <div class="ibox-content">
-     <div class="col-md-4">
+     <div class="col-md-2">
           <form action="/Serv" method="post" class="form-horizontal">
 
             <div class="form-group">
               <label for="idTecnico" control-label">ID Técnico</label>
-              <input type="text" id="idTecnico" name="idTecnico" class="form-control">
+              <input type="text" id="idTecnico" name="idTecnico" class="form-control" required="">
+            </div>
+
+            <div class="form-group">
+              <label for="idTipoServ" control-label">ID Tipo servicio</label>
+              <input type="text" id="idTipoServ" name="idTipoServicio" class="form-control" required="">
             </div>
 
             <div class="form-group">
               <label for="idUsuario">ID Usuario</label>
-              <input type="text" id="idUsuario" name="idUsuario" class="form-control">
+              <input type="text" id="idUsuario" name="idUsuario" class="form-control" required="">
             </div>
 
             <div class="form-group">
               <label for="idCliente">ID Cliente</label>
-              <input type="text" id="idCliente" name="idCliente" class="form-control">
+              <input type="text" id="idCliente" name="idCliente" class="form-control" required="">
             </div>
 
             <div class="form-group">
               <label for="Problema">Problema</label>
-              <input type="text" id="Problema" name="Problema" class="form-control">
+              <input type="text" id="Problema" name="Problema" class="form-control" required="">
             </div>
 
             <div class="form-group">
               <label for="Observaciones">Observaciones</label>
-              <input type="text" id="Observaciones" name="Observaciones" class="form-control">
+              <input type="text" id="Observaciones" name="Observaciones" class="form-control" required="">
             </div>
 
             <div class="form-group">
               <label for="Estado">Estado</label>
-              <input type="text" id="Estado" name="Estatus" class="form-control">
+              <input type="text" id="Estado" name="Estatus" class="form-control" required="">
             </div>
              
               <div class="modal-footer">
@@ -58,14 +63,16 @@
           </form>
     </div>
 
-    <div class="col-md-8">
+    <div class="col-md-10">
+        <fieldset>
+        <legend> Actividades sin completar</legend>
           <div class="scroll">
             <input type="text" class="form-control input-sm m-b-xs" id="filter" placeholder="Buscar ...">
               <table class="footable table table-stripped" data-filter="#filter" data-page-size="6" id="informacion">
                 <thead>
                   <tr>
-
                    <th nowrap>ID Servicio</th>
+                   <th nowrap>ID Tipo servicio</th>
                    <th nowrap>ID Técnico</th>
                    <th nowrap>ID Usuario</th>
                    <th nowrap>ID Cliente</th>
@@ -73,11 +80,9 @@
                    <th nowrap>Observaciones</th>
                    <th nowrap>Estado</th>
                    <th nowrap>Opciones</th>
-                    
                   </tr>
                 </thead>
                 <tbody class="Table">
-                  
                 </tbody>
                 <tfoot>
                   <tr>
@@ -88,6 +93,7 @@
                 </tfoot>
               </table>
             </div>
+        </fieldset>
      </div>
 
 
@@ -107,32 +113,37 @@
                     <div class="controls">
                         <div class="form-group">
                           <label for="idTecnico1" control-label">ID Técnico</label>
-                          <input type="text" id="idTecnico1" name="idTecnico" class="form-control">
+                          <input type="text" id="idTecnico1" name="idTecnico" class="form-control" required="">
+                        </div>
+
+                        <div class="form-group">
+                          <label for="idTipoServ1" control-label">ID Tipo servicio</label>
+                          <input type="text" id="idTipoServ1" name="idTipoServicio" class="form-control" required="">
                         </div>
 
                         <div class="form-group">
                           <label for="idUsuario1">ID Usuario</label>
-                          <input type="text" id="idUsuario1" name="idUsuario" class="form-control">
+                          <input type="text" id="idUsuario1" name="idUsuario" class="form-control" required="">
                         </div>
 
                         <div class="form-group">
                           <label for="idCliente1">ID Cliente</label>
-                          <input type="text" id="idCliente1" name="idCliente" class="form-control">
+                          <input type="text" id="idCliente1" name="idCliente" class="form-control" required="">
                         </div>
 
                         <div class="form-group">
                           <label for="Problema1">Problema</label>
-                          <input type="text" id="Problema1" name="Problema" class="form-control">
+                          <input type="text" id="Problema1" name="Problema" class="form-control" required="">
                         </div>
 
                         <div class="form-group">
                           <label for="Observaciones1">Observaciones</label>
-                          <input type="text" id="Observaciones1" name="Observaciones" class="form-control">
+                          <input type="text" id="Observaciones1" name="Observaciones" class="form-control" required="">
                         </div>
 
                         <div class="form-group">
                           <label for="Estado1">Estado</label>
-                          <input type="text" id="Estado1" name="Estatus" class="form-control">
+                          <input type="text" id="Estado1" name="Estatus" class="form-control" required="">
                         </div>
                         <input type="hidden" class="form-control" id="id" name="idServicio" required="" >
                         </div>
@@ -149,7 +160,7 @@
 
 	<% include ../views/Secciones/footer %>
 	<script>
-		 
+		
 		$("#sub-item-1").collapse();
 
      function editarServ(id) {
@@ -173,7 +184,17 @@
      }
 
       function delServ(id) {
-         $.ajax({
+          swal({
+            title: "¿Estás seguro?",
+            text: "¡No podrás recuperar el registro!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Si, dale cuello!",
+            closeOnConfirm: false
+          }, function () {
+            swal("Eliminado!", "El registro ha sido eliminado.", "success", setTimeout(function() { 
+              $.ajax({
              url: "/delServ/" + id + "",
              type: "GET",
              success: function (result) {
@@ -185,10 +206,15 @@
              }, error: function (result) {
                 alert(result);
              }
-         });
+              });
+
+            }, 1200));
+           
+        });
      }
 
      function Done(id) {
+       swal("¡Buen trabajo!", "¡La actividad ha sido completada!", "success", setTimeout(function() { 
          $.ajax({
              url: "/ServDone/" + id + "",
              type: "GET",
@@ -199,9 +225,10 @@
                   alert("Ocurrio un error: "+ result);
                 }
              }, error: function (result) {
-                alert(result);
+                alert(result[0].err);
              }
          });
+      }, 2000));
      }
 
 		$(document).ready(function(){
@@ -221,14 +248,15 @@
                           var row = $("<tr>");
 
                         $('.Table').append(row); 
-                        row.append($("<td>" + result[i].idServicio + "</td>"));  
+                        row.append($("<td>" + result[i].idServicio + "</td>"));
+                        row.append($("<td>" + result[i].idTipoServicio + "</td>"));  
                         row.append($("<td>" + result[i].idTécnico + "</td>"));
                         row.append($("<td>" + result[i].idUsuario + "</td>"));
                         row.append($("<td>" + result[i].idCliente + "</td>"));
                         row.append($("<td>"+ result[i].Problema + "</td>"));
                         row.append($("<td>"+ result[i].Observaciones + "</td>"));
                         row.append($("<td>"+ result[i].Estatus + "</td>"));
-                        row.append($("<td >" + "<button onclick=Done("+result[i].idServicio+") class='widget-icon'><i class='fa fa-check-square-o text-navy'></i></button>" +" &nbsp; " + "<button onclick=editarServ("+result[i].idServicio+") class='widget-icon'><i class='fa fa-edit text-navy'></i></button>" + " &nbsp; " + "<button class='widget-icon' id='Opcion2' onclick=delServ("+result[i].idServicio+")><i class='fa fa-trash text-navy'></i></button>" + "</td>"));
+                        row.append($("<td >" +" &nbsp; " + "<button onclick=Done("+result[i].idServicio+") class='widget-icon'><i class='fa fa-check-square-o text-navy'></i></button>" +" &nbsp; " + "<button onclick=editarServ("+result[i].idServicio+") class='widget-icon'><i class='fa fa-edit text-navy'></i></button>" + " &nbsp; " + "<button class='widget-icon' id='Opcion2' onclick=delServ("+result[i].idServicio+")><i class='fa fa-trash text-navy'></i></button>" + "</td>"));
                         $('.footable').footable();
                   		}
 			        }
