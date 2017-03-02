@@ -215,6 +215,26 @@
 
          });
      }
+
+     function correo(mail) {
+          var to=mail;      
+            //alert("Enviando Email... porfavor espere.");
+             $.ajax({
+             url: "/send/" + to + "",
+             type: "GET",
+             success: function (result) {
+                if(result=="sent")
+            {
+              swal("El mensaje se ha sido enviado.", "la contraseña fue enviada a "+to+".", "success", setTimeout(function() { 
+                }, 1200));
+            }
+             }, error: function (result) {
+                alert(result);
+             }
+
+         });
+      }
+
 		$(document).ready(function(){
 			$("#item3").addClass("active");
 
@@ -226,9 +246,7 @@
 			        }else{
 
 			          for (var i = 0; i <= result.length; i++) {
-
 			          	var row = $("<tr>")
-
 			            $('.Table').append(row); 
 			            row.append($("<td>" + result[i].idTécnico + "</td>"));
                   row.append($("<td>" + result[i].Nombre + "</td>"));
@@ -236,9 +254,9 @@
 			            row.append($("<td>"+ result[i].Tel + "</td>"));
 			            row.append($("<td>"+ result[i].IDNextel + "</td>"));
                   row.append($("<td>"+ result[i].Puesto + "</td>"));
-			            row.append($("<td >" + " &nbsp; " + "<button onclick=editarT("+result[i].idTécnico+") class='widget-icon'><i class='fa fa-edit text-navy'></i></button>" + " &nbsp; " + "<button class='widget-icon' id='Opcion2' onclick=delTech("+result[i].idTécnico+")><i class='fa fa-trash text-navy'></i></button>" + "</td>"));
+			            row.append($("<td >" + "<button onclick=correo("+'"'+result[i].Email+'"'+") class='widget-icon'><i class='fa fa-send text-navy'></i></button>" +" &nbsp; " + "<button onclick=editarT("+result[i].idTécnico+") class='widget-icon'><i class='fa fa-edit text-navy'></i></button>" + " &nbsp; " + "<button class='widget-icon' onclick=delTech("+result[i].idTécnico+")><i class='fa fa-trash text-navy'></i></button>" + "</td>"));
 			            $('.footable').attr("data-page-size","5");
-                  		}
+                  }
 			        }
 		        }
 		    });
