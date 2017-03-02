@@ -141,6 +141,7 @@ app.get('/delClient/:id', login, function(req, res){
 	});
 });
 
+
 //============= SECCIÓN DE TÉCNICOS ============================\\
 
 app.get('/infoTech', login, function(req, res){
@@ -228,13 +229,19 @@ app.get('/delTipoServ/:id', login, function(req, res){
 //============= SECCIÓN DE SERVICIO ============================\\
 
 app.get('/infoS', login, function(req, res){
-	BD.query("SELECT * from servicios", function(err, result){
+	BD.query('SELECT *, DATE_FORMAT(Fecha, "%d/%m/%Y") Fecha from servicios WHERE stats = 1', function(err, result){
+		res.send(result);
+	});
+});
+
+app.get('/infoSD', login, function(req, res){
+	BD.query('SELECT *, DATE_FORMAT(Fecha, "%d/%m/%Y") Fecha from servdone ORDER BY idServDone DESC', function(err, result){
 		res.send(result);
 	});
 });
 
 app.post('/Serv',login,function(req, res){
-	BD.query("INSERT INTO servicios (idTécnico, idTipoServicio, Problema, idUsuario, Observaciones, Estatus, idCliente) VALUES (?,?,?,?,?,?)",[req.body.idTecnico, req.body.idTipoServicio, req.body.Problema, req.body.idUsuario, req.body.Observaciones, req.body.Estatus, req.body.idCliente],
+	BD.query("INSERT INTO servicios (idTécnico, idTipoServicio, Problema, idUsuario, Observaciones, Estatus, Fecha, stats) VALUES (?,?,?,?,?,?,NOW(),?)",[req.body.idTecnico, req.body.idTipoServicio, req.body.Problema, req.body.idUsuario, req.body.Observaciones, req.body.Estatus,1],
 		function(err, result){
 			console.log(err);
 			console.log(result);
@@ -251,16 +258,28 @@ app.get('/editServ/:id', login, function(req, res){
 });
 
 app.post('/upServ',login, function(req, res){
-	BD.query('UPDATE servicios set idTécnico = ?, idTipoServicio = ?, Problema = ?, idUsuario = ?, Observaciones = ?, Estatus = ? WHERE idCliente = ?',[req.body.idTecnico, req.body.idTipoServicio, req.body.Problema, req.body.idUsuario, req.body.Observaciones, req.body.Estatus, req.body.idCliente],
+	BD.query('UPDATE servicios set idTécnico = ?, idTipoServicio = ?, Problema = ?, idUsuario = ?, Observaciones = ?, Estatus = ? WHERE idServicio = ?',[req.body.idTecnico, req.body.idTipoServicio, req.body.Problema, req.body.idUsuario, req.body.Observaciones, req.body.Estatus, req.body.idServicio],
 		function(err, result){
 			res.redirect('/services');
 		});
 });
 
 app.get('/ServDone/:id',login, function(req, res){
-	BD.query('UPDATE servicios set Estatus = ? WHERE idServicio = ?',["Terminado", req.params.id],
+	BD.query('INSERT INTO servdone (idServicio, Fecha) VALUES (?,now())',[req.params.id],
 		function(err, result){
+			BD.query("UPDATE servicios set stats = 0, Estatus = ? WHERE idServicio = ?",["Terminado",req.params.id], function(err, result){
 			if(!err){
+				res.send("done");
+			}else{
+				res.send(err);
+			}
+		});
+	});
+});
+
+app.get('/delServ/:id', login, function(req, res){
+	BD.query("UPDATE servicios set stats = 0  WHERE idServicio = ?",[req.params.id], function(err, result){
+		if(!err){
 			res.send("done");
 		}else{
 			res.send(err);
@@ -268,8 +287,38 @@ app.get('/ServDone/:id',login, function(req, res){
 	});
 });
 
-app.get('/delServ/:id', login, function(req, res){
-	BD.query("DELETE from servicios WHERE idServicio = ?",[req.params.id], function(err, result){
+ //============= SECCIÓN DE Usuarios ============================\\
+app.get('/infouS', login, function(req, res){
+	BD.query("SELECT * from usuarios", function(err, result){
+		res.send(result);
+	});
+});
+
+app.post('/user',login,function(req, res){
+	BD.query("INSERT INTO usuarios (Nombre, Descripcion) VALUES (?,?)",[req.body.Nombre, req.body.Descripcion],
+		function(err, result){
+			if(!err){
+			res.redirect('/Tservices');
+			}
+		});
+});
+
+app.get('/editTipoServ/:id', login, function(req, res){
+	BD.query("SELECT * from tiposervicios WHERE idTipoServicio = ?",[req.params.id], function(err, result){
+		res.send(result);
+	});
+});
+
+app.post('/upTipoServ',login, function(req, res){
+	BD.query('UPDATE tiposervicios set Nombre = ?, Descripcion = ? WHERE idTipoServicio = ?',[req.body.Nombre, req.body.Descripcion, req.body.idTipoServicio],
+		function(err, result){
+			res.redirect('/Tservices');
+		});
+
+});
+
+app.get('/delTipoServ/:id', login, function(req, res){
+	BD.query("DELETE from tiposervicios WHERE idTipoServicio = ?",[req.params.id], function(err, result){
 		if(!err){
 			res.send("done");
 		}else{

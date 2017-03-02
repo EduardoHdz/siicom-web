@@ -4,6 +4,11 @@
 <% include ../views/Secciones/head %>
 	<title><%=title%></title>
 	<% include ../views/Secciones/header %>
+  <script>
+      window.onload = function() {
+        window.addEventListener('mousemove', function(){$('.footable').footable()});
+      };
+    </script>
 </head>
 <body>
 <% include ../views/Secciones/menu %>
@@ -94,21 +99,38 @@
                      <div class="modal-body clearfix">
                          <div class="controls">
                              <div class="form-group">
-                                 <label for="Nombre1">Nombre</label>
+                                 <label for="Nombre">Nombre</label>
                                   <input type="text" class="form-control" id="Nombre1" name="Nombre" placeholder="Nombre" required="" >
                               </div>
                               <div class="form-group">
-                                  <label for="Tel1">Tel</label>
+                                 <label for="Email">Email</label>
+                                  <input type="email" class="form-control" id="Email1" name="Email" placeholder="example@example.com" required="" >
+                              </div>
+                               <div class="form-group">
+                                 <label for="Nombre">Password</label>
+                                  <input type="password" class="form-control" id="Password1" name="Password" placeholder="Password" required="" >
+                              </div>
+                              <div class="form-group">
+                                  <label for="Tel">Tel</label>
                                   <input type="text" class="form-control" id="Tel1" name="Tel" placeholder="Télefono" required="" >
                               </div>
                               <div class="form-group">
-                                  <label for="ID-Nextel1">ID-Nextel</label>
+                                  <label for="ID-Nextel">ID-Nextel</label>
                                  <input type="text" class="form-control" id="ID-Nextel1" name="IDNextel" placeholder="ID-Nextel" required="" >
                               </div>
 
                               <div class="form-group">
-                                  <label for="Puesto1">Puesto</label>
+                                  <label for="Puesto">Puesto</label>
                                  <input type="text" class="form-control" id="Puesto1" name="Puesto" placeholder="Puesto" required="" >
+                              </div>
+
+                              <div class="form-group">
+                                  <label for="UL">Nivel de usuario</label>
+                                 <SELECT class="form-control" id="UL" name="userLvl1" required="">
+                                  <option value="">Seleccione..</option>
+                                  <option value="0"> Estandar </option>
+                                  <option value="1"> Administrador </option>
+                                  </SELECT> 
                               </div>
                               <input type="hidden" class="form-control" id="id" name="idTécnico" required="" >
                           </div>
@@ -126,12 +148,14 @@
     <div class="ibox-content" id="informacion">
           <div class="scroll">
             <input type="text" class="form-control input-sm m-b-xs" id="filter" placeholder="Buscar ...">
-              <table class="footable table table-stripped" data-filter="#filter" data-page-size="6" id="informacion">
+              <table class="footable table table-stripped" data-filter="#filter" data-page-size="" id="informacion">
                 <thead>
                   <tr>
 
                    <th nowrap>ID Técnico</th>
                    <th nowrap>Nombre</th>
+                   <th nowrap>Email</th>
+                   <th nowrap>Password</th>
                    <th nowrap>Teléfono</th>
                    <th nowrap>ID-Nextel</th>
                    <th nowrap>Puesto</th>
@@ -165,9 +189,12 @@
              type: "GET",
              success: function (result) {
                  $('#Nombre1').val(result[0].Nombre);
+                 $('#Email1').val(result[0].Email);
+                 $('#Password1').val(result[0].Password);
                  $('#Tel1').val(result[0].Tel);
                  $('#ID-Nextel1').val(result[0].IDNextel);
                  $('#Puesto1').val(result[0].Puesto);
+                 $('#userLvl1').val(result[0].userLvl);
                  $('#id').val(result[0].idTécnico);
              }, error: function (result) {
 
@@ -210,12 +237,15 @@
 
 			            $('.Table').append(row); 
 			            row.append($("<td>" + result[i].idTécnico + "</td>"));
-			            row.append($("<td>" + result[i].Nombre + "</td>"));
+                  row.append($("<td>" + result[i].Nombre + "</td>"));
+                  row.append($("<td>" + result[i].Email + "</td>"));
+			            row.append($("<td>" + result[i].Password + "</td>"));
 			            row.append($("<td>"+ result[i].Tel + "</td>"));
 			            row.append($("<td>"+ result[i].IDNextel + "</td>"));
-			            row.append($("<td>"+ result[i].Puesto + "</td>"));
+                  row.append($("<td>"+ result[i].Puesto + "</td>"));
+			            row.append($("<td>"+ result[i].userLvl + "</td>"));
 			            row.append($("<td >" + " &nbsp; " + "<button onclick=editarT("+result[i].idTécnico+") class='widget-icon'><i class='fa fa-edit text-navy'></i></button>" + " &nbsp; " + "<button class='widget-icon' id='Opcion2' onclick=delTech("+result[i].idTécnico+")><i class='fa fa-trash text-navy'></i></button>" + "</td>"));
-			            $('.footable').footable();
+			            $('.footable').attr("data-page-size","5");
                   		}
 			        }
 		        }

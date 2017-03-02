@@ -5,6 +5,11 @@
 	<title><%=title%></title>
 	  
    <% include ../views/Secciones/header %>
+   <script>
+      window.onload = function() {
+        window.addEventListener('mousemove', function(){$('.footable').footable()});
+      };
+    </script>
 </head>
 <body>
 <% include ../views/Secciones/menu %>
@@ -108,7 +113,7 @@
     <div class="ibox-content" id="informacion">
           <div class="scroll">
             <input type="text" class="form-control input-sm m-b-xs" id="filter" placeholder="Buscar ...">
-              <table class="footable table table-stripped" data-filter="#filter" data-page-size="6" id="informacion">
+              <table class="footable table table-stripped" data-filter="#filter" data-page-size="" id="informacion">
                 <thead>
                   <tr>
 
@@ -200,7 +205,7 @@
 			            row.append($("<td>"+ result[i].Tel + "</td>"));
 			            row.append($("<td>"+ result[i].RFC + "</td>"));
 			            row.append($("<td >" + " &nbsp; " + "<button onclick=editarC("+result[i].idCliente+") class='widget-icon'><i class='fa fa-edit text-navy'></i></button>" + " &nbsp; " + "<button class='widget-icon' id='Opcion2' onclick=delClient("+result[i].idCliente+")><i class='fa fa-trash text-navy'></i></button>" + "</td>"));
-			            $('.footable').footable();
+			            $('.footable').attr("data-page-size","5");
                   }
 			        }
 		        }

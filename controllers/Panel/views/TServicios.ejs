@@ -4,6 +4,11 @@
 <% include ../views/Secciones/head %>
 	<title><%=title%></title>
 	<% include ../views/Secciones/header %>
+  <script>
+      window.onload = function() {
+        window.addEventListener('mousemove', function(){$('.footable').footable()});
+      };
+    </script>
 </head>
 <body>
 <% include ../views/Secciones/menu %>
@@ -177,7 +182,7 @@
 			            row.append($("<td>" + result[i].Nombre + "</td>"));
 			            row.append($("<td>" + result[i].Descripcion + "</td>"));
 			            row.append($("<td >" + " &nbsp; " + "<button onclick=editarTS("+result[i].idTipoServicio+") class='widget-icon'><i class='fa fa-edit text-navy'></i></button>" + " &nbsp; " + "<button class='widget-icon' id='Opcion2' onclick=delTipoServ("+result[i].idTipoServicio+")><i class='fa fa-trash text-navy'></i></button>" + "</td>"));
-			            $('.footable').footable();
+			            $('.footable').attr("data-page-size","5");
                   		}
 			        }
 		        }
