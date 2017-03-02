@@ -4,6 +4,11 @@
 <% include ../views/Secciones/head %>
 	<title><%=title%></title>
 	<% include ../views/Secciones/header %>
+  <script>
+      window.onload = function() {
+        window.addEventListener('mousemove', function(){$('.footable').footable()});
+      };
+    </script>
 </head>
 <body>
 <% include ../views/Secciones/menu %>
@@ -23,23 +28,21 @@
           <form action="/Serv" method="post" class="form-horizontal">
 
             <div class="form-group">
-              <label for="idTecnico" control-label">ID Técnico</label>
-              <input type="text" id="idTecnico" name="idTecnico" class="form-control" required="">
+              <label for="idTecnico" control-label">Técnico</label>
+              <SELECT class="form-control" id="idTecnico" name="idTecnico" required="">
+              </SELECT> 
             </div>
 
             <div class="form-group">
-              <label for="idTipoServ" control-label">ID Tipo servicio</label>
-              <input type="text" id="idTipoServ" name="idTipoServicio" class="form-control" required="">
+             <label for="idTipoServ">Tipo de servicio</label>
+              <SELECT class="form-control" id="idTipoServ" name="idTipoServicio" required="">
+              </SELECT> 
             </div>
 
             <div class="form-group">
-              <label for="idUsuario">ID Usuario</label>
-              <input type="text" id="idUsuario" name="idUsuario" class="form-control" required="">
-            </div>
-
-            <div class="form-group">
-              <label for="idCliente">ID Cliente</label>
-              <input type="text" id="idCliente" name="idCliente" class="form-control" required="">
+              <label for="idUsuario">Usuario</label>
+              <SELECT class="form-control" id="idUsuario" name="idUsuario" required="">
+              </SELECT> 
             </div>
 
             <div class="form-group">
@@ -54,7 +57,9 @@
 
             <div class="form-group">
               <label for="Estado">Estado</label>
-              <input type="text" id="Estado" name="Estatus" class="form-control" required="">
+              <SELECT class="form-control" id="Estado" name="Estatus" required="">
+              <option value="Pendiente"> Pendiente</option>
+              </SELECT> 
             </div>
              
               <div class="modal-footer">
@@ -68,17 +73,17 @@
         <legend> Actividades sin completar</legend>
           <div class="scroll">
             <input type="text" class="form-control input-sm m-b-xs" id="filter" placeholder="Buscar ...">
-              <table class="footable table table-stripped" data-filter="#filter" data-page-size="6" id="informacion">
+              <table class="footable table table-stripped" data-filter="#filter" data-page-size="5" id="informacion">
                 <thead>
                   <tr>
                    <th nowrap>ID Servicio</th>
                    <th nowrap>ID Tipo servicio</th>
                    <th nowrap>ID Técnico</th>
                    <th nowrap>ID Usuario</th>
-                   <th nowrap>ID Cliente</th>
                    <th nowrap>Problema</th>
                    <th nowrap>Observaciones</th>
                    <th nowrap>Estado</th>
+                   <th nowrap>Fecha</th>
                    <th nowrap>Opciones</th>
                   </tr>
                 </thead>
@@ -96,7 +101,32 @@
         </fieldset>
      </div>
 
-
+     <div class="col-md-10">
+        <fieldset>
+        <legend> Actividades completadas</legend>
+          <div class="scroll">
+            <input type="text" class="form-control input-sm m-b-xs" id="filter2" placeholder="Buscar ...">
+              <table class="footable table table-stripped" data-filter="#filter2" data-page-size="5" id="informacion">
+                <thead>
+                  <tr>
+                   <th nowrap>ID </th>
+                   <th nowrap>ID Servicio</th>
+                   <th nowrap>Fecha</th>
+                  </tr>
+                </thead>
+                <tbody class="Table2">
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="11">
+                      <ul class="pagination pull-right"></ul>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+        </fieldset>
+     </div>
   </div>
 
   <!--ACTUALIZAR SERVICIO-->
@@ -111,40 +141,38 @@
             <form action="/upServ" method="post" name="info_form">
                 <div class="modal-body clearfix">
                     <div class="controls">
-                        <div class="form-group">
-                          <label for="idTecnico1" control-label">ID Técnico</label>
-                          <input type="text" id="idTecnico1" name="idTecnico" class="form-control" required="">
-                        </div>
+                         <div class="form-group">
+                            <label for="idTecnico1 control-label">Técnico</label>
+                            <SELECT class="form-control" id="idTecnico1" name="idTecnico" required="">
+                            </SELECT> 
+                          </div>
 
-                        <div class="form-group">
-                          <label for="idTipoServ1" control-label">ID Tipo servicio</label>
-                          <input type="text" id="idTipoServ1" name="idTipoServicio" class="form-control" required="">
-                        </div>
+                          <div class="form-group">
+                           <label for="idTipoServ1">Tipo de servicio</label>
+                            <SELECT class="form-control" id="idTipoServ1" name="idTipoServicio" required="">
+                            </SELECT> 
+                          </div>
 
-                        <div class="form-group">
-                          <label for="idUsuario1">ID Usuario</label>
-                          <input type="text" id="idUsuario1" name="idUsuario" class="form-control" required="">
-                        </div>
+                          <div class="form-group">
+                            <label for="idUsuario1">Usuario</label>
+                            <SELECT class="form-control" id="idUsuario1" name="idUsuario" required="">
+                            </SELECT> 
+                          </div>
 
-                        <div class="form-group">
-                          <label for="idCliente1">ID Cliente</label>
-                          <input type="text" id="idCliente1" name="idCliente" class="form-control" required="">
-                        </div>
+                          <div class="form-group">
+                            <label for="Problema1">Problema</label>
+                            <input type="text" id="Problema1" name="Problema" class="form-control" required="">
+                          </div>
 
-                        <div class="form-group">
-                          <label for="Problema1">Problema</label>
-                          <input type="text" id="Problema1" name="Problema" class="form-control" required="">
-                        </div>
+                          <div class="form-group">
+                            <label for="Observaciones1">Observaciones</label>
+                            <input type="text" id="Observaciones1" name="Observaciones" class="form-control" required="">
+                          </div>
 
-                        <div class="form-group">
-                          <label for="Observaciones1">Observaciones</label>
-                          <input type="text" id="Observaciones1" name="Observaciones" class="form-control" required="">
-                        </div>
-
-                        <div class="form-group">
-                          <label for="Estado1">Estado</label>
-                          <input type="text" id="Estado1" name="Estatus" class="form-control" required="">
-                        </div>
+                          <div class="form-group">
+                            <label for="Estado1">Estado</label>
+                            <input type="text" id="Estado1" name="Estatus" class="form-control" required="">
+                          </div>
                         <input type="hidden" class="form-control" id="id" name="idServicio" required="" >
                         </div>
                     </div>
@@ -159,9 +187,102 @@
 </div>
 
 	<% include ../views/Secciones/footer %>
+
+
 	<script>
 		
 		$("#sub-item-1").collapse();
+		$(document).ready(function(){
+			
+			$("#sub-item-Service").addClass("active");
+
+			$.ajax({
+        url: "/infoS",
+        Type: "GET",
+        success: function(result){
+          if(result==0){
+              }else{
+
+                for (var i = 0; i <= result.length; i++) {
+                        // put select items here
+
+                          var row = $("<tr>");
+
+                        $('.Table').append(row); 
+                        row.append($("<td>" + result[i].idServicio + "</td>"));
+                        row.append($("<td>" + result[i].idTipoServicio + "</td>"));  
+                        row.append($("<td>" + result[i].idTécnico + "</td>"));
+                        row.append($("<td>" + result[i].idUsuario + "</td>"));
+                        row.append($("<td>"+ result[i].Problema + "</td>"));
+                        row.append($("<td>"+ result[i].Observaciones + "</td>"));
+                        row.append($("<td>"+ result[i].Estatus + "</td>"));
+                        row.append($("<td>" + result[i].Fecha + "</td>"));
+                        row.append($("<td >" +" &nbsp; " + "<button onclick=Done("+result[i].idServicio+") class='widget-icon'><i class='fa fa-check-square-o text-navy'></i></button>" +" &nbsp; " + "<button onclick=editarServ("+result[i].idServicio+") class='widget-icon'><i class='fa fa-edit text-navy'></i></button>" + " &nbsp; " + "<button class='widget-icon' id='Opcion2' onclick=delServ("+result[i].idServicio+")><i class='fa fa-trash text-navy'></i></button>" + "</td>"));
+                        $('.footable').attr("data-page-size","5");
+                      }
+              }
+            }
+
+            });
+
+      $.ajax({
+				url: "/infoSD",
+				Type: "GET",
+				success: function(result){
+					if(result==0){
+			        }else{
+
+			          for (var i = 0; i <= result.length; i++) {
+                        // put select items here
+
+                          var row = $("<tr>");
+
+                        $('.Table2').append(row); 
+                        row.append($("<td>" + result[i].idServDone + "</td>"));
+                        row.append($("<td>" + result[i].idServicio + "</td>"));  
+                        row.append($("<td>" + result[i].Fecha + "</td>"));
+                        $('.footable').attr("data-page-size","5");
+                  		}
+			        }
+		        }
+
+		        });
+
+
+            $.ajax({
+              url: "/infoTech",
+              Type: "GET",
+              success: function(result){
+              for (var i = 0; i <= result.length; i++) {
+                    $('#idTecnico').append( '<option value="'+result[i].idTécnico+'">'+result[i].Nombre+'</option>' );
+                    $('#idTecnico1').append( '<option value="'+result[i].idTécnico+'">'+result[i].Nombre+'</option>' );
+                
+                    }
+                  }
+              });
+
+            $.ajax({
+              url: "/infoTS",
+              Type: "GET",
+              success: function(result){
+                      for (var i = 0; i <= result.length; i++) {
+                        $('#idTipoServ').append( '<option value="'+result[i].idTipoServicio+'">'+result[i].Nombre+'</option>' );
+                        $('#idTipoServ1').append( '<option value="'+result[i].idTipoServicio+'">'+result[i].Nombre+'</option>' );
+                      }
+                   }
+                });
+
+            $.ajax({
+              url: "/infouS",
+              Type: "GET",
+              success: function(result){
+                      for (var i = 0; i <= result.length; i++) {
+                        $('#idUsuario').append( '<option value="'+result[i].idUsuario+'">'+result[i].Nombre+'</option>' );
+                        $('#idUsuario1').append( '<option value="'+result[i].idUsuario+'">'+result[i].Nombre+'</option>' );
+                      }
+                   }
+                });
+		});
 
      function editarServ(id) {
          $('#editServ').modal();
@@ -193,24 +314,23 @@
             confirmButtonText: "Si, dale cuello!",
             closeOnConfirm: false
           }, function () {
-            swal("Eliminado!", "El registro ha sido eliminado.", "success", setTimeout(function() { 
-              $.ajax({
-             url: "/delServ/" + id + "",
-             type: "GET",
-             success: function (result) {
-                if(result = "done"){
-                  location.reload();
-                }else{
-                  alert("Ocurrio un error: "+ result);
-                }
-             }, error: function (result) {
-                alert(result);
-             }
-              });
+                swal("Eliminado!", "El registro ha sido eliminado.", "success", setTimeout(function() { 
+                  $.ajax({
+                 url: "/delServ/" + id + "",
+                 type: "GET",
+                 success: function (result) {
+                    if(result = "done"){
+                      location.reload();
+                    }else{
+                      alert("Ocurrio un error: "+ result);
+                    }
+                 }, error: function (result) {
+                    alert(result);
+                 }
+                  });
 
-            }, 1200));
-           
-        });
+                }, 1200));
+         });
      }
 
      function Done(id) {
@@ -230,40 +350,6 @@
          });
       }, 2000));
      }
-
-		$(document).ready(function(){
-			
-			$("#sub-item-Service").addClass("active");
-
-			$.ajax({
-				url: "/infoS",
-				Type: "GET",
-				success: function(result){
-					if(result==0){
-			        }else{
-
-			          for (var i = 0; i <= result.length; i++) {
-                        // put select items here
-
-                          var row = $("<tr>");
-
-                        $('.Table').append(row); 
-                        row.append($("<td>" + result[i].idServicio + "</td>"));
-                        row.append($("<td>" + result[i].idTipoServicio + "</td>"));  
-                        row.append($("<td>" + result[i].idTécnico + "</td>"));
-                        row.append($("<td>" + result[i].idUsuario + "</td>"));
-                        row.append($("<td>" + result[i].idCliente + "</td>"));
-                        row.append($("<td>"+ result[i].Problema + "</td>"));
-                        row.append($("<td>"+ result[i].Observaciones + "</td>"));
-                        row.append($("<td>"+ result[i].Estatus + "</td>"));
-                        row.append($("<td >" +" &nbsp; " + "<button onclick=Done("+result[i].idServicio+") class='widget-icon'><i class='fa fa-check-square-o text-navy'></i></button>" +" &nbsp; " + "<button onclick=editarServ("+result[i].idServicio+") class='widget-icon'><i class='fa fa-edit text-navy'></i></button>" + " &nbsp; " + "<button class='widget-icon' id='Opcion2' onclick=delServ("+result[i].idServicio+")><i class='fa fa-trash text-navy'></i></button>" + "</td>"));
-                        $('.footable').footable();
-                  		}
-			        }
-		        }
-
-		        });
-		});
 	</script>	
 </body>
 </html>
