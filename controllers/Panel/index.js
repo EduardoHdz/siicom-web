@@ -254,14 +254,17 @@ app.get('/delTipoServ/:id', login, function(req, res){
 
 //============= SECCIÓN DE SERVICIO ============================\\
 
+// SELECT b.idBebedero idBebedero, cor.Nombre idCorral, b.Capacidad Capacidad, b.Nombre Nombre, b.Descripcion Descripcion from bebedero b LEFT JOIN corral cor ON b.idCorral = cor.idCorral 
+
 app.get('/infoS', login, function(req, res){
-	BD.query('SELECT *, DATE_FORMAT(Fecha, "%d/%m/%Y") Fecha from servicios WHERE stats = 1', function(err, result){
+	//BD.query('SELECT *, DATE_FORMAT(Fecha, "%d/%m/%Y") Fecha from servicios WHERE stats = 1', function(err, result){
+		BD.query('SELECT s.idServicio idServicio, ts.Nombre idTipoServicio, t.Nombre idTécnico, u.Nombre idUsuario , s.Problema Problema, s.Observaciones Observaciones, s.Estatus Estatus, DATE_FORMAT(Fecha, "%d/%m/%Y") Fecha from servicios s LEFT JOIN tiposervicios ts ON s.idTipoServicio = ts.idTipoServicio LEFT JOIN técnicos t ON s.idTécnico = t.idTécnico LEFT JOIN usuarios u ON s.idUsuario = u.idUsuario WHERE stats = 1', function(err, result){
 		res.send(result);
 	});
 });
 
 app.get('/infoSD', login, function(req, res){
-	BD.query('SELECT *, DATE_FORMAT(Fecha, "%d/%m/%Y") Fecha from servdone ORDER BY idServDone DESC', function(err, result){
+	BD.query('SELECT sd.idServDone, sd.idServicio, s.Problema, s.Observaciones, s.Estatus , DATE_FORMAT(sd.Fecha, "%d/%m/%Y") Fecha from servdone sd LEFT JOIN servicios s ON sd.idServicio = s.idServicio ORDER BY sd.idServDone DESC', function(err, result){
 		res.send(result);
 	});
 });
