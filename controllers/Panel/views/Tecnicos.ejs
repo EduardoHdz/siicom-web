@@ -54,11 +54,11 @@
                               </div>
                               <div class="form-group">
                                   <label for="Tel">Tel</label>
-                                  <input type="text" class="form-control" id="Tel" name="Tel" placeholder="Télefono" required="" >
+                                  <input type="text" class="form-control" id="Tel" data-mask="(999) 999-9999" name="Tel" placeholder="Télefono" required="" >
                               </div>
                               <div class="form-group">
                                   <label for="ID-Nextel">ID-Nextel</label>
-                                 <input type="text" class="form-control" id="ID-Nextel" name="IDNextel" placeholder="ID-Nextel" required="" >
+                                 <input type="text" class="form-control" id="ID-Nextel" data-mask="99-999999-9" name="IDNextel" placeholder="ID-Nextel" required="" >
                               </div>
 
                               <div class="form-group">
@@ -108,11 +108,11 @@
                               </div>
                               <div class="form-group">
                                   <label for="Tel">Tel</label>
-                                  <input type="text" class="form-control" id="Tel1" name="Tel" placeholder="Télefono" required="" >
+                                  <input type="text" class="form-control" id="Tel1" data-mask="(999) 999-9999" name="Tel" placeholder="Télefono" required="" >
                               </div>
                               <div class="form-group">
                                   <label for="ID-Nextel">ID-Nextel</label>
-                                 <input type="text" class="form-control" id="ID-Nextel1" name="IDNextel" placeholder="ID-Nextel" required="" >
+                                 <input type="text" class="form-control" id="ID-Nextel1" data-mask="99-999999-9" name="IDNextel" placeholder="ID-Nextel" required="" >
                               </div>
 
                               <div class="form-group">
@@ -200,21 +200,32 @@
 
 
       function delTech(id) {
-         $.ajax({
-             url: "/delTech/" + id + "",
-             type: "GET",
-             success: function (result) {
-                if(result = "done"){
-                  location.reload();
-                }else{
-                  alert("Ocurrio un error: "+ result);
-                }
-             }, error: function (result) {
-                alert(result);
+        swal({
+            title: "¿Estás seguro?",
+            text: "¡No podrás recuperar el registro!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Si, dale cuello!",
+            closeOnConfirm: false
+          }, function () {
+                swal("Eliminado!", "El registro ha sido eliminado.", "success", setTimeout(function() { 
+                 $.ajax({
+                     url: "/delTech/" + id + "",
+                     type: "GET",
+                     success: function (result) {
+                        if(result = "done"){
+                          location.reload();
+                        }else{
+                          alert("Ocurrio un error: "+ result);
+                        }
+                     }, error: function (result) {
+                        alert(result);
+                     }
+                   });
+                 }, 1200));
+             });
              }
-
-         });
-     }
 
      function correo(mail) {
           var to=mail;      

@@ -262,8 +262,10 @@ app.get('/editTech/:id', login, function(req, res){
 });
 
 app.post('/upTech',login, function(req, res){
-	BD.query('UPDATE técnicos set Nombre = ?, Tel = ?, Email, IDNextel = ?, Puesto = ? WHERE idTécnico = ?',[req.body.Nombre, req.body.Tel, req.body.Email, req.body.IDNextel, req.body.Puesto, req.body.idTécnico],
+	BD.query('UPDATE técnicos set Nombre = ?, Tel = ?, Email = ?, IDNextel = ?, Puesto = ? WHERE idTécnico = ?',[req.body.Nombre, req.body.Tel, req.body.Email, req.body.IDNextel, req.body.Puesto, req.body.idTécnico],
 		function(err, result){
+			console.log(err);
+			console.log(result);
 			res.redirect('/technical');
 		});
 

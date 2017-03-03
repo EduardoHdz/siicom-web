@@ -145,6 +145,16 @@
 
 
       function delTipoServ(id) {
+        swal({
+            title: "¿Estás seguro?",
+            text: "¡No podrás recuperar el registro!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Si, dale cuello!",
+            closeOnConfirm: false
+          }, function () {
+                swal("Eliminado!", "El registro ha sido eliminado.", "success", setTimeout(function() { 
          $.ajax({
              url: "/delTipoServ/" + id + "",
              type: "GET",
@@ -159,6 +169,8 @@
              }
 
          });
+         }, 1200));
+      });
      }
 
 		$("#sub-item-1").collapse();

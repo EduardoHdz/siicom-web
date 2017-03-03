@@ -51,11 +51,11 @@
                               </div>
                               <div class="form-group">
                                   <label for="Tel">Tel</label>
-                                  <input type="text" class="form-control" id="Tel" name="Tel" placeholder="Télefono" required="" >
+                                  <input type="text" data-mask="(999) 999-9999" class="form-control" id="Tel" name="Tel" placeholder="(999) 999-9999" required="" >
                               </div>
                               <div class="form-group">
                                   <label for="RFC">RFC</label>
-                                 <input type="text" class="form-control" id="RFC" name="RFC" placeholder="RFC" required="" >
+                                 <input type="text" class="form-control"  id="RFC" name="RFC" placeholder="RFC" required="" >
                               </div>
                           </div>
                       </div>
@@ -91,7 +91,7 @@
                               </div>
                               <div class="form-group">
                                   <label for="Tel1">Tel</label>
-                                  <input type="text" class="form-control" id="Tel1" name="Tel" placeholder="Teléfono" required="" >
+                                  <input type="text" class="form-control" data-mask="(999) 999-9999" id="Tel1" name="Tel" placeholder="Teléfono" required="" >
                               </div>
                               <div class="form-group">
                                   <label for="RFC1">RFC</label>
@@ -166,6 +166,16 @@
 
 
       function delClient(id) {
+         swal({
+            title: "¿Estás seguro?",
+            text: "¡No podrás recuperar el registro!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Si, dale cuello!",
+            closeOnConfirm: false
+          }, function () {
+                swal("Eliminado!", "El registro ha sido eliminado.", "success", setTimeout(function() { 
          $.ajax({
              url: "/delClient/" + id + "",
              type: "GET",
@@ -178,9 +188,10 @@
              }, error: function (result) {
                 alert(result);
              }
-
          });
-     }
+        }, 1200));
+      });
+    }
 
 		$(document).ready(function(){
 			$("#item2").addClass("active");
