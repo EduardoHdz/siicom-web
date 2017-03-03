@@ -171,11 +171,10 @@ app.post('/upProfile', login, function(req, res){
 });
 
 app.post('/photoProfile/:id', upload.array('foto', 1),login, function(req, res){
-				console.log(req.files[0]);
 
  		if(req.files[0].mimetype == "image/jpg" || req.files[0].mimetype == "image/jpeg"){
- 			 fs.createReadStream('./uploads/'+req.files[0].filename).pipe(fs.createWriteStream('./public/fotos/Técnicos/'+req.params.id+'-'+"foto de perfil.jpg")); 
-			   path = "../fotos/Técnicos/"+req.params.id+'-'+"foto de perfil.jpg";
+ 			 fs.createReadStream('./uploads/'+req.files[0].filename).pipe(fs.createWriteStream('./public/fotos/Tecnicos/'+req.params.id+'-'+"foto.jpg")); 
+			   path = "../fotos/Tecnicos/"+req.params.id+'-'+"foto.jpg";
 			   BD.query('UPDATE técnicos set Foto = ? WHERE idTécnico = ?',[path, req.params.id],function(err, result){
 			   		console.log("La foto se ha a registrado con: "+path+" errores: "+err+" resultado: "+result);
 			   		fs.unlink('./uploads/'+req.files[0].filename); 
@@ -183,8 +182,8 @@ app.post('/photoProfile/:id', upload.array('foto', 1),login, function(req, res){
 			   });
 
  		}else if(req.files[0].mimetype == "image/png"){
- 			fs.createReadStream('./uploads/'+req.files[0].filename).pipe(fs.createWriteStream('./public/fotos/Técnicos/'+req.params.id+'-'+"foto de perfil.png")); 
-			   path = "../fotos/Técnicos/"+req.params.id+'-'+"foto de perfil.png";
+ 			fs.createReadStream('./uploads/'+req.files[0].filename).pipe(fs.createWriteStream('./public/fotos/Tecnicos/'+req.params.id+'-'+"foto.png")); 
+			   path = "../fotos/Tecnicos/"+req.params.id+'-'+"foto.png";
 			   BD.query('UPDATE técnicos set Foto = ? WHERE idTécnico = ?',[path, req.params.id],function(err, result){
 			   		console.log("La foto se ha a registrado con: "+path+" errores: "+err+" resultado: "+result);
 			   		fs.unlink('./uploads/'+req.files[0].filename); 

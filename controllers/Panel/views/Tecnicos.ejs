@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<link href="../css/style.css" rel="stylesheet">
 <% include ../views/Secciones/head %>
 	<title><%=title%></title>
 	<% include ../views/Secciones/header %>
@@ -139,69 +140,37 @@
             </div>
           </div>
         </div>
+       
 
 
-    <div class="ibox-content" id="informacion">
-          <div class="scroll">
-            <input type="text" class="form-control input-sm m-b-xs" id="filter" placeholder="Buscar ...">
-              <table class="footable table table-stripped" data-filter="#filter" data-page-size="" id="informacion">
-                <thead>
-                  <tr>
-
-                   <th nowrap>ID Técnico</th>
-                   <th nowrap>Nombre</th>
-                   <th nowrap>Email</th>
-                   <th nowrap>Teléfono</th>
-                   <th nowrap>ID-Nextel</th>
-                   <th nowrap>Puesto</th>
-                   <th nowrap>Opciones</th>
-                  </tr>
-
-                </thead>
-                <tbody class="Table">
-
-                </tbody>
-                <tfoot>
-                  <tr>
-                    <td colspan="11">
-                      <ul class="pagination pull-right"></ul>
-                    </td>
-                  </tr>
-                </tfoot>
-              </table>
-            </div>
-     </div>
-     <div class="row">
-     <div class="col-lg-3">
-                <div class="contact-box center-version">
-
-                    <a href="profile.html">
-
-                        <img alt="image" class="img-circle" src="img/a2.jpg">
-
-
-                        <h3 class="m-b-xs"><strong>John Smith</strong></h3>
-
-                        <div class="font-bold">Graphics designer</div>
-                        <address class="m-t-md">
-                            <strong>Twitter, Inc.</strong><br>
-                            795 Folsom Ave, Suite 600<br>
-                            San Francisco, CA 94107<br>
-                            <abbr title="Phone">P:</abbr> (123) 456-7890
-                        </address>
-
-                    </a>
-                    <div class="contact-box-footer">
-                        <div class="m-t-xs btn-group">
-                            <a class="btn btn-xs btn-white"><i class="fa fa-phone"></i> Call </a>
-                            <a class="btn btn-xs btn-white"><i class="fa fa-envelope"></i> Email</a>
-                            <a class="btn btn-xs btn-white"><i class="fa fa-user-plus"></i> Follow</a>
-                        </div>
-                    </div>
-
-                </div>
-
+  <div id="datas" class="content">
+   
   </div>
+
+  <!--ACTUALIZACIÓN DE FOTO-->
+<div class="modal inmodal" id="foto" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content animated bounceIn">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">Actualizar foto</h4>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="/photoProfile" enctype="multipart/form-data" id="formPhoto">
+            <div class="modal-body clearfix">
+              <div class="form-group">
+                  <label for="Foto">Foto de perfil</label>
+                  <input type="file" accept="image/x-png,image/jpg,image/jpeg"  class="form-control" name="foto"  id="Foto" required>
+                </div>
+              </div>
+            <button type="submit" class="actualizarFoto btn btn-primary">Subir</button>
+          <div class="modal-footer">
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
 </div>
 
@@ -280,6 +249,36 @@
          });
       }
 
+       function TakeFoto(id) {
+          $('#foto').modal();
+          $(".actualizarFoto").on("click", function(evt){
+          evt.preventDefault();
+
+          var formData = new FormData(document.getElementById("formPhoto"));
+            $.ajax({
+                   type: "post" ,
+                   url: '/photoProfile/'+id+'',
+                   data: formData, // Adjuntar los campos del formulario enviado.
+                   contentType: false,
+                   processData: false,
+                   beforeSend: function() 
+                  {
+                      //$('#mensaje').prepend('<img src="facebook.gif" />');
+                  },
+                   success: function(data)
+                   {
+                    if(data=='done'){
+                       location.reload();
+                    }else{
+                      alert("Ocurrió un error: "+data);
+                    }
+                   }
+              });
+           });
+       }
+
+      
+
 		$(document).ready(function(){
 			$("#item3").addClass("active");
 
@@ -291,16 +290,11 @@
 			        }else{
 
 			          for (var i = 0; i <= result.length; i++) {
-			          	var row = $("<tr>")
-			            $('.Table').append(row); 
-			            row.append($("<td>" + result[i].idTécnico + "</td>"));
-                  row.append($("<td>" + result[i].Nombre + "</td>"));
-                  row.append($("<td>" + result[i].Email + "</td>"));
-			            row.append($("<td>"+ result[i].Tel + "</td>"));
-			            row.append($("<td>"+ result[i].IDNextel + "</td>"));
-                  row.append($("<td>"+ result[i].Puesto + "</td>"));
-			            row.append($("<td >" + "<button onclick=correo("+'"'+result[i].Email+'"'+") class='widget-icon'><i class='fa fa-send text-navy'></i></button>" +" &nbsp; " + "<button onclick=editarT("+result[i].idTécnico+") class='widget-icon'><i class='fa fa-edit text-navy'></i></button>" + " &nbsp; " + "<button class='widget-icon' onclick=delTech("+result[i].idTécnico+")><i class='fa fa-trash text-navy'></i></button>" + "</td>"));
-			            $('.footable').attr("data-page-size","5");
+                var card = $("<div class='col-lg-3'> </div>");
+                  $('#datas').append(card); 
+                  card.append($(
+                    "<div class='contact-box' style='width:250px;height:450px;margin:0 auto; margin-bottom:3%;' ><img alt='image' class='img-circle' style='width:150px;height:150px;margin-left:25px;' src="+result[i].Foto+"><h3 style='margin-left:55px;' class='m-b-xs'><strong>"+ result[i].Nombre + "</strong></h3><div class='font-bold' style='margin-left:6px;'>Puesto: "+ result[i].Puesto+ "</div><address class='m-t-md' style='margin-left:6px;'>Email: <strong>"+result[i].Email+"</strong><br>Teléfono: "+result[i].Tel+"<br>ID-Nextel: "+result[i].IDNextel+"<br></address><div class='contact-box-footer'><div class='m-t-xs btn-group'><a class='btn btn-xs btn-white' onclick=TakeFoto("+'"'+result[i].idTécnico+'"'+")><i class='fa fa-camera'></i> Foto </a><a class='btn btn-xs btn-white' onclick=correo("+'"'+result[i].Email+'"'+")><i class='fa fa-send'></i> Password </a><a class='btn btn-xs btn-white' onclick=editarT("+result[i].idTécnico+")><i class='fa fa-pencil'></i> Editar</a><a class='btn btn-xs btn-white' onclick=delTech("+result[i].idTécnico+")><i class='fa fa-trash'></i> Elimar</a></div></div></div>"));
+			            
                   }
 			        }
 		        }
