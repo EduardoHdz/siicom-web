@@ -36,6 +36,9 @@
       success: function(res){
         $("#name").html(res[0].Nombre);
         $("#setting").attr("href", "/settings/"+res[0].Email);
+        if(res[0].Foto == ""){
+          $("#fperfil").attr("src", "../fotos/no-user-image.jpg");
+        }
         if(res[0].userLvl == 1){
           $("#lvl").html("Administrador");
           $("#item3").show();
@@ -54,9 +57,21 @@
     <!-- left column -->
     <div class="col-md-4 col-sm-6 col-xs-12">
       <div class="text-center">
-        <img src="http://lorempixel.com/200/200/people/9/" class="avatar img-circle img-thumbnail" alt="avatar">
-        <h6>Upload a different photo...</h6>
-        <input type="file" class="text-center center-block well well-sm">
+        <img id="fperfil" src="<%=data[0].Foto%>" style="width: 300px;height: 300px;" class=" img-circle "  alt="avatar">
+        <div  id="foto" tabindex="-1" aria-hidden="true">
+
+        <form method="post" action="/photoProfile" enctype="multipart/form-data" id="formPhoto">
+            <div class="modal-body clearfix">
+              <div class="form-group">
+                  <label for="Foto">Foto de perfil</label>
+                  <input type="file" accept="image/x-png,image/jpg,image/jpeg"  class="form-control" name="foto"  id="Foto" required>
+                </div>
+              </div>
+            <button type="submit" class="actualizarFoto btn btn-primary">Subir</button>
+          <div class="modal-footer">
+          </div>
+        </form>
+        </div>
       </div>
     </div>
     <!-- edit form column -->
@@ -105,6 +120,34 @@
   </div>
 </div>
 <% include ../views/Secciones/footer %>
+
+<script>
+  
+  $(".actualizarFoto").on("click", function(evt){
+      evt.preventDefault();
+
+      var formData = new FormData(document.getElementById("formPhoto"));
+        $.ajax({
+               type: "post" ,
+               url: '/photoProfile/'+<%=data[0].idTécnico%>+'',
+               data: formData, // Adjuntar los campos del formulario enviado.
+               contentType: false,
+               processData: false,
+               beforeSend: function() 
+              {
+                  //$('#mensaje').prepend('<img src="facebook.gif" />');
+              },
+               success: function(data)
+               {
+                if(data=='done'){
+                   location.reload();
+                }else{
+                  alert("Ocurrió un error: "+data);
+                }
+               }
+             });
+     });
+</script>
 
 </body>
 </html>

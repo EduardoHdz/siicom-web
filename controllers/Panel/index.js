@@ -1,7 +1,8 @@
 var express = require('express');
 var mysql = require('mysql');
 const nodemailer = require("nodemailer");
-var busboy = require('connect-busboy');
+var multer = require('multer');
+var upload = multer({dest: './uploads/'});
 var fs = require('fs');
 var crypto = require('crypto'),
         algorithm = 'aes-256-ctr',
@@ -101,7 +102,7 @@ app.get('/inventario',login, function(req, res){
 });
 
 app.get('/infoUser',login, function(req, res){
-	BD.query("SELECT Nombre, Email, userLvl FROM técnicos WHERE Email = ?", [req.session.logged],
+	BD.query("SELECT Foto, Nombre, Email, userLvl FROM técnicos WHERE Email = ?", [req.session.logged],
 		function(err, result){
 			res.send(result);
 		});
@@ -168,30 +169,34 @@ app.post('/upProfile', login, function(req, res){
 			});
 	}
 });
-/*
-app.post('/photoUsers', login, function(req, res){
-                     var fstream;
-                     var path;
-                     var ID;
-                     req.pipe(req.busboy);
-                     req.busboy.on('file', function (fieldname, file, filename) {
-                         ID = fieldname;
-                         if(filename.includes('.jpg') || filename.includes('.jpeg') || filename.includes('.png') || filename.includes('.JPG') || filename.includes('.JPEG') || filename.includes('.PNG')){
-                            fstream = fs.createWriteStream(__dirname + '/uploads/photo_users/'+ID+'-'+filename);
-                            path = './uploads/photo_users/'+ ID+'-'+filename;
-                            file.pipe(fstream);
-                            fstream.on('close', function () {
-                                objBD.query('UPDATE users set user_imagen = ? WHERE user_id = ?',[path, ID],
-                                    function( error, result){
-                                    res.redirect('/signup');
-                                    });
-                                });
-                                }else{
-                                    res.send("Archivo no soportado<br> <h4><a href='/signup'>Regresar</a></h4>");
-                                 }
-                        });
-     });
-     */
+
+app.post('/photoProfile/:id', upload.array('foto', 1),login, function(req, res){
+				console.log(req.files[0]);
+
+ 		if(req.files[0].mimetype == "image/jpg" || req.files[0].mimetype == "image/jpeg"){
+ 			 fs.createReadStream('./uploads/'+req.files[0].filename).pipe(fs.createWriteStream('./public/fotos/Técnicos/'+req.params.id+'-'+"foto de perfil.jpg")); 
+			   path = "../fotos/Técnicos/"+req.params.id+'-'+"foto de perfil.jpg";
+			   BD.query('UPDATE técnicos set Foto = ? WHERE idTécnico = ?',[path, req.params.id],function(err, result){
+			   		console.log("La foto se ha a registrado con: "+path+" errores: "+err+" resultado: "+result);
+			   		fs.unlink('./uploads/'+req.files[0].filename); 
+		      	 	res.send('done');
+			   });
+
+ 		}else if(req.files[0].mimetype == "image/png"){
+ 			fs.createReadStream('./uploads/'+req.files[0].filename).pipe(fs.createWriteStream('./public/fotos/Técnicos/'+req.params.id+'-'+"foto de perfil.png")); 
+			   path = "../fotos/Técnicos/"+req.params.id+'-'+"foto de perfil.png";
+			   BD.query('UPDATE técnicos set Foto = ? WHERE idTécnico = ?',[path, req.params.id],function(err, result){
+			   		console.log("La foto se ha a registrado con: "+path+" errores: "+err+" resultado: "+result);
+			   		fs.unlink('./uploads/'+req.files[0].filename); 
+		      	 	res.send('done');
+			   });
+ 		}else{
+ 			res.send('Archivo no soportado');
+ 		}
+			  
+		       
+ 
+ 	});
 
 //============= SECCIÓN DE CLIENTES ============================\\
 
