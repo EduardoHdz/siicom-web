@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<link href="../css/style.css" rel="stylesheet">
+<% include ../views/Secciones/head %>
+  <title>SIICOM-MX | Cambiar contraseña</title>
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="/dashboard"><img src="../img/siicomLogo.png" style="width: 120px; height: 30px; margin-top: -5px;"></a>
+        <ul class="user-menu">
+          <li class="dropdown pull-right">
+          </li>
+        </ul>
+      </div>  
+    </div><!-- /.container-fluid -->
+  </nav>
+ 
+</head>
+<body>
+  
+    <!-- edit form column -->
+    <div class="col-md-8 col-sm-6 col-xs-12 personal-info">
+      <h3>Cambio de contraseña</h3>
+      <form class="form-horizontal" id="formpass">
+            <input value="<%=email%>" name="Email" type="hidden">
+
+        <div class="form-group">
+          <label class="col-lg-3 control-label">Nueva contraseña.</label>
+          <div class="col-lg-8">
+            <input class="form-control" id="Pass" name="Pass" value="" type="password" required="">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="col-lg-3 control-label">Confirmar contraseña.</label>
+          <div class="col-lg-8">
+            <input class="form-control" id="Pass2" name="Pass2" value="" type="password" required="">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-md-3 control-label"></label>
+          <div class="col-md-8">
+            <input class="btn btn-primary" onclick="send()" value="Cambiar contraseña" type="submit">
+            <span></span>
+          </div>
+          <div class="col-md-8">
+            <button class="btn btn-default"> <a href="/"> No hacer cambios </a></button>
+          </div>
+        </div>
+      </form>
+    </div>
+  <% include ../views/Secciones/footer %>
+  <script>
+    
+
+function send(){
+      var pass1 = $('#Pass').val();
+      var pass2 = $('#Pass2').val();
+      if(pass1 == "" || pass2 == ""){
+         swal("Error", "Tienes al menos un campo vacío.", "warning");
+      }else{
+        if(pass1 == pass2){
+          $.ajax({
+          url: '/upPass',
+          type: "post" ,
+          data: $("#formpass").serialize(),
+           success: function(data){
+             
+           }
+          });
+        }else{
+           swal("Error", "Las contraseñas no coinciden.", "error");
+             var pass1 = $('#Pass').val("");
+             var pass2 = $('#Pass2').val("");
+        }
+
+      }
+
+}
+     
+  </script>
+</body>
+</html>

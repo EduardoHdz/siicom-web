@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <% include ../views/Secciones/head %>
-	<title><%=title%></title>
+	<title>SIICOM-MX | Inventario</title>
 	<% include ../views/Secciones/header %>
   <script>
       window.onload = function() {
@@ -99,7 +99,7 @@
           </form>
     </div>
 
-    <div class="col-md-10">
+    <div id="content" class="col-md-10">
         <fieldset>
         <legend> Registros en inventario</legend>
           <div class="scroll">
@@ -266,6 +266,7 @@
 
             });
     });
+     
 
      function editarInv(id) {
          $('#editServ').modal();

@@ -74,31 +74,31 @@ app.get('/dashboard', login, function(req, res) {
 });
 
 app.get('/client', login, function(req, res){
-		res.render('clientes',{title:"Clientes"});
+		res.render('clientes',{title:" Clientes"});
 });
 
 app.get('/technical',admin, function(req, res){
-	res.render('Tecnicos',{title: "Técnicos"});
+	res.render('Tecnicos',{title: " Técnicos"});
 });
 
 app.get('/Tservices',login, function(req, res){
-	res.render('TServicios',{title: "Tipo de Servicios"});
+	res.render('TServicios',{title: " Tipo de Servicios"});
 });
 
 app.get('/services',login, function(req, res){
-	res.render('Servicios',{title: "Servicios"});
+	res.render('Servicios',{title: " Servicios"});
 });
 
 app.get('/record',login, function(req, res){
-	res.render('Historial',{title: "Historial"});
+	res.render('Historial',{title: " Historial"});
 });
 
 app.get('/user',login, function(req, res){
-	res.render('Usuarios',{title: "Usuarios"});
+	res.render('Usuarios',{title: " Usuarios"});
 });
 
 app.get('/inventario',login, function(req, res){
-	res.render('Inventario',{title: "Inventario"});
+	res.render('Inventario',{title: " Inventario"});
 });
 
 app.get('/infoUser',login, function(req, res){
@@ -118,21 +118,22 @@ app.get('/infoUser',login, function(req, res){
         }
     });
 
- var rand, mailOptions, host, link;
+ var generar, mailOptions, host, link, link2;
     /// email verification request
     app.get('/send/:id',function(req,res){
-        host=req.get('host'); //remplace ip address to 'host' to make it universal
-        //link="http://"+req.get('host')+"/verify?id="+rand+"&mail="+req.query.to;
-        link="http://"+"10.150.193.14:3000"+"/login";
+
+        generar=Math.floor((Math.random() * 975367567) + 53);
         var mail = req.params.id;
+        link="http://"+"10.150.193.14:3000"+"/login";
+        link2="http://"+"10.150.193.14:3000"+"/resetp?SecurityCode="+generar+"&mail="+mail;
 
         BD.query('SELECT Nombre, Password FROM técnicos WHERE Email = ?',[mail], function(err, result){
         	var contra = decrypt(result[0].Password);
         	mailOptions={
-        	from: '"SIICOM-MX" <desarrollo.siicom@gmail.com>',
+        	from: '"SIICOM-MX SUPPORT" <desarrollo.siicom@gmail.com>',
             to : mail,
-            subject : "[SIICOM-MEX] Password.",
-            html : "Hola "+result[0].Nombre+",<br>La contraseña de acceso para esta cuenta ha sido enviada.<br>Su contraseña es: &nbsp; "+contra+" <br><a href="+link+">Logearse en la plataforma.</a>" 
+            subject : "Password request.",
+            html : "Hola "+result[0].Nombre+",<br>La contraseña de acceso para esta cuenta ha sido solicitada.<br>Su contraseña es: &nbsp; "+contra+" <br><br><a href="+link+">Ir a login.</a><br><br><a href="+link2+">Cambiar contraseña.</a>" 
 	        }
 	        console.log(mailOptions); // Show details of mailOptions in console
 	        smtpTransport.sendMail(mailOptions, function(error, response){
@@ -140,12 +141,38 @@ app.get('/infoUser',login, function(req, res){
 	         	console.log(error);
 	            res.end("error");
 	         }else{
-	            res.end("sent");
+	         	BD.query('UPDATE técnicos set mailCode = ? WHERE Email = ?',[generar, mail],
+	         		function(err, result){
+			            res.end("sent");
+	         		});
 	             }
 	         });
 
         });
-        
+    });
+
+    app.get('/resetp', function(req, res){
+    	var mail = req.query.mail;
+    	var code = req.query.SecurityCode;
+    	if(mail== null){
+    		res.redirect('/');
+    	}else{
+    		BD.query('SELECT Email from técnicos WHERE Email = ?',[mail], function(err, resultado){
+    			if(resultado == 0){
+    				res.status(404).render('404', { url: req.url });
+    			}else{
+		    		BD.query('SELECT mailCode FROM técnicos WHERE Email = ?',[mail], function(err, result){
+		    			if(result[0].mailCode == code){
+		    				res.render('Rpass',{title:" Cambiar contraseña",email:mail});
+		    			}else{
+		    				res.status(404).render('404', { url: req.url });
+		    			}
+    				});
+    			}
+
+    		});
+    	
+    	}
     });
 
 //============= SECCIÓN DE PERFIL ============================\\
@@ -154,7 +181,7 @@ app.get('/settings/:id',login,function(req, res){
 	if(req.params.id == req.session.logged){
 		BD.query('SELECT * from Técnicos WHERE Email = ?',[req.params.id],
 			function(err, result){
-				res.render('profile',{title: "Perfíl",data:result});
+				res.render('profile',{title: " Perfíl",data:result});
 			});
 	}else{
 		res.redirect('/dashboard');
@@ -168,6 +195,20 @@ app.post('/upProfile', login, function(req, res){
 				res.redirect('/settings/'+req.session.logged);
 			});
 	}
+});
+
+app.post('/upPass',function(req,res){
+	var pass = encrypt(req.body.Pass);
+	BD.query('UPDATE técnicos set Password = ? WHERE Email = ?',[pass, req.body.Email],
+		function(err, result){
+			console.log(err);
+			console.log(result);
+			if(err){
+				res.send('error: '+err);
+			}else{
+				res.redirect('/dashboard');
+			}
+		});
 });
 
 app.post('/photoProfile/:id', upload.array('foto', 1),login, function(req, res){
@@ -200,7 +241,7 @@ app.post('/photoProfile/:id', upload.array('foto', 1),login, function(req, res){
 //============= SECCIÓN DE CLIENTES ============================\\
 
 app.get('/infoClients', login, function(req, res){
-	BD.query("SELECT * from clientes", function(err, result){
+	BD.query("SELECT * from clientes ORDER BY idCliente DESC", function(err, result){
 		res.send(result);
 	});
 });
@@ -242,7 +283,7 @@ app.get('/delClient/:id', login, function(req, res){
 //============= SECCIÓN DE TÉCNICOS ============================\\
 
 app.get('/infoTech', login, function(req, res){
-	BD.query("SELECT * from técnicos", function(err, result){
+	BD.query("SELECT * from técnicos ORDER BY idTécnico DESC", function(err, result){
 		res.send(result);
 	});
 });
@@ -287,7 +328,7 @@ app.get('/delTech/:id', login, function(req, res){
 
  //============= SECCIÓN DE TIPO DE SERVICIO ============================\\
 app.get('/infoTS', login, function(req, res){
-	BD.query("SELECT * from tiposervicios", function(err, result){
+	BD.query("SELECT * from tiposervicios ORDER BY idTipoServicio DESC", function(err, result){
 		res.send(result);
 	});
 });
@@ -391,7 +432,7 @@ app.get('/delServ/:id', login, function(req, res){
 
  //============= SECCIÓN DE Usuarios ============================ PENDIENTE \\ 
 app.get('/infouS', login, function(req, res){
-	BD.query("SELECT u.idUsuario idUsuario, u.Nombre Nombre, u.Extención Extención, u.Email Email, u.PassEmail PassEmail, c.Nombre idCliente, i.NombreEquip idInventario from usuarios u LEFT JOIN clientes c ON u.idCliente = c.idCliente LEFT JOIN inventario i ON u.idInventario = i.idInventario", function(err, result){
+	BD.query("SELECT u.idUsuario idUsuario, u.Nombre Nombre, u.Extención Extención, u.Email Email, u.PassEmail PassEmail, c.Nombre idCliente, i.NombreEquip idInventario from usuarios u LEFT JOIN clientes c ON u.idCliente = c.idCliente LEFT JOIN inventario i ON u.idInventario = i.idInventario ORDER BY u.idUsuario DESC", function(err, result){
 		res.send(result);
 	});
 });
@@ -431,7 +472,7 @@ app.get('/delUser/:id', login, function(req, res){
 
 //============= SECCIÓN DE INVENTARIO ============================\\
 app.get('/infoInv', login, function(req, res){
-	BD.query("SELECT * from inventario", function(err, result){
+	BD.query("SELECT * from inventario ORDER BY idInventario DESC", function(err, result){
 		res.send(result);
 	});
 });
@@ -471,7 +512,7 @@ app.get('/delInv/:id', login, function(req, res){
 
  //============= SECCIÓN DE HISTORIAL ============================\\
 app.get('/infoH', login, function(req, res){
-	BD.query('SELECT h.idHistorial idHistorial, c.Nombre idCliente, u.Nombre idUsuario, h.EquipoV, h.EquipoN, DATE_FORMAT(h.Fecha, "%d/%m/%Y") Fecha from historial h LEFT JOIN clientes c ON h.idCliente = c.idCliente LEFT JOIN usuarios u ON h.idUsuario = u.idUsuario', function(err, result){
+	BD.query('SELECT h.idHistorial idHistorial, c.Nombre idCliente, u.Nombre idUsuario, h.EquipoV, h.EquipoN, DATE_FORMAT(h.Fecha, "%d/%m/%Y") Fecha from historial h LEFT JOIN clientes c ON h.idCliente = c.idCliente LEFT JOIN usuarios u ON h.idUsuario = u.idUsuario ORDER BY h.idHistorial DESC', function(err, result){
 		res.send(result);
 	});
 });

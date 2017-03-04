@@ -3,7 +3,7 @@
 <head>
 <link href="../css/style.css" rel="stylesheet">
 <% include ../views/Secciones/head %>
-	<title><%=title%></title>
+	<title>SIICOM-MX | Técnicos</title>
 	<% include ../views/Secciones/header %>
   <script>
       window.onload = function() {
@@ -19,6 +19,7 @@
     <div class="row">
 			<div class="col-sm-12">
         <h1 class="page-header">Información de técnicos</h1>
+        <p><bu<a href="javascript:void(0)" id="imprime"><button>Imprime</button> </a></p> 
       </div>
 
       <div class="col-sm-12">
@@ -239,7 +240,7 @@
              success: function (result) {
                 if(result=="sent")
             {
-              swal("El mensaje se ha sido enviado.", "la contraseña fue enviada a "+to+".", "success", setTimeout(function() { 
+              swal("El correo ha sido enviado.", "la contraseña fue enviada a "+to+".", "success", setTimeout(function() { 
                 }, 1200));
             }
              }, error: function (result) {
@@ -276,29 +277,56 @@
               });
            });
        }
+    
+
 
       
 
 		$(document).ready(function(){
 			$("#item3").addClass("active");
-
+        
+      
 				$.ajax({
 				url: "/infoTech",
 				Type: "GET",
 				success: function(result){
 					if(result==0){
 			        }else{
-
+                var user = $("#setting").attr("href");
 			          for (var i = 0; i <= result.length; i++) {
-                var card = $("<div class='col-lg-3'> </div>");
+                var card = $("<div class='col-md-3'> </div>");
                   $('#datas').append(card); 
-                  card.append($(
-                    "<div class='contact-box' style='width:250px;height:450px;margin:0 auto; margin-bottom:3%;' ><img alt='image' class='img-circle' style='width:150px;height:150px;margin-left:25px;' src="+result[i].Foto+"><h3 style='margin-left:55px;' class='m-b-xs'><strong>"+ result[i].Nombre + "</strong></h3><div class='font-bold' style='margin-left:6px;'>Puesto: "+ result[i].Puesto+ "</div><address class='m-t-md' style='margin-left:6px;'>Email: <strong>"+result[i].Email+"</strong><br>Teléfono: "+result[i].Tel+"<br>ID-Nextel: "+result[i].IDNextel+"<br></address><div class='contact-box-footer'><div class='m-t-xs btn-group'><a class='btn btn-xs btn-white' onclick=TakeFoto("+'"'+result[i].idTécnico+'"'+")><i class='fa fa-camera'></i> Foto </a><a class='btn btn-xs btn-white' onclick=correo("+'"'+result[i].Email+'"'+")><i class='fa fa-send'></i> Password </a><a class='btn btn-xs btn-white' onclick=editarT("+result[i].idTécnico+")><i class='fa fa-pencil'></i> Editar</a><a class='btn btn-xs btn-white' onclick=delTech("+result[i].idTécnico+")><i class='fa fa-trash'></i> Elimar</a></div></div></div>"));
-			            
+
+                  if( user.includes(result[i].Email)){
+
+                     if(result[i].Foto == ""){
+                         card.append($(
+                        "<div class='contact-box' style='width:250px;height:450px;margin:0 auto; margin-bottom:3%;background-color:#F0EDED;border-radius: 25px;box-shadow:  2px 11px 79px -18px rgba(0,0,0,0.75);' ><img alt='image' class='img-circle' style='width:150px;height:150px;margin-left:25px;box-shadow:  2px 11px 79px -18px rgba(0,0,0,0.75);' src=../fotos/no-user-image.jpg><h3 style='margin-left:55px;' class='m-b-xs'><strong>"+ result[i].Nombre + "</strong></h3><div class='font-bold' style='margin-left:6px;'>Puesto: "+ result[i].Puesto+ "</div><address class='m-t-md' style='margin-left:6px;'><strong>"+result[i].Email+"</strong><br>Teléfono: "+result[i].Tel+"<br>ID-Nextel: "+result[i].IDNextel.replace(/-/g,"*")+"<br></address><div class='contact-box-footer' style='background-color:#F0EDED;border-radius: 25px;'></div></div>"));
+                      }else{
+                         card.append($(
+                        "<div class='contact-box' style='width:250px;height:450px;margin:0 auto; margin-bottom:3%;background-color:#F0EDED;border-radius: 25px;box-shadow:  2px 11px 79px -18px rgba(0,0,0,0.75);' ><img alt='image' class='img-circle' style='width:150px;height:150px;margin-left:25px;box-shadow:  2px 11px 79px -18px rgba(0,0,0,0.75);' src="+result[i].Foto+"><h3 style='margin-left:55px;' class='m-b-xs'><strong>"+ result[i].Nombre + "</strong></h3><div class='font-bold' style='margin-left:6px;'>Puesto: "+ result[i].Puesto+ "</div><address class='m-t-md' style='margin-left:6px;'><strong>"+result[i].Email+"</strong><br>Teléfono: "+result[i].Tel+"<br>ID-Nextel: "+result[i].IDNextel.replace(/-/g,"*")+"<br></address><div class='contact-box-footer' style='background-color:#F0EDED;border-radius: 25px;'></div></div>"));
+                      }
+              
+                }else{
+                  
+                      if(result[i].Foto == ""){
+                         card.append($(
+                        "<div class='contact-box' style='width:250px;height:450px;margin:0 auto; margin-bottom:3%; background-color:#F0EDED;border-radius: 25px;box-shadow:  2px 11px 79px -18px rgba(0,0,0,0.75);' ><img alt='image' class='img-circle' style='width:150px;height:150px;margin-left:25px;box-shadow:  2px 11px 79px -18px rgba(0,0,0,0.75);' src=../fotos/no-user-image.jpg><h3 style='margin-left:55px;' class='m-b-xs'><strong>"+ result[i].Nombre + "</strong></h3><div class='font-bold' style='margin-left:6px;'>Puesto: "+ result[i].Puesto+ "</div><address class='m-t-md' style='margin-left:6px;'><strong>"+result[i].Email+"</strong><br>Teléfono: "+result[i].Tel+"<br>ID-Nextel: "+result[i].IDNextel.replace(/-/g,"*")+"<br></address><div class='contact-box-footer' style='border-radius: 25px;'><div class='m-t-xs btn-group'><a class='btn btn-xs btn-white col-md-6' onclick=TakeFoto("+'"'+result[i].idTécnico+'"'+")><i class='fa fa-camera'></i> Foto </a><a class='btn btn-xs btn-white' onclick=correo("+'"'+result[i].Email+'"'+")><i class='fa fa-send'></i> Password </a><a class='btn btn-xs btn-white col-md-6' onclick=editarT("+result[i].idTécnico+")>&nbsp;<i class='fa fa-pencil'></i> Editar</a><a class='btn btn-xs btn-white' onclick=delTech("+result[i].idTécnico+")><i class='fa fa-trash'></i> Elimar</a></div></div></div>"));
+                      }else{
+                         card.append($(
+                        "<div class='contact-box' style='width:250px;height:450px;margin:0 auto; margin-bottom:3%; background-color:#F0EDED;border-radius: 25px;box-shadow:  2px 11px 79px -18px rgba(0,0,0,0.75);' ><img alt='image' class='img-circle' style='width:150px;height:150px;margin-left:25px;box-shadow:  2px 11px 79px -18px rgba(0,0,0,0.75);' src="+result[i].Foto+"><h3 style='margin-left:55px;' class='m-b-xs'><strong>"+ result[i].Nombre + "</strong></h3><div class='font-bold' style='margin-left:6px;'>Puesto: "+ result[i].Puesto+ "</div><address class='m-t-md' style='margin-left:6px;'><strong>"+result[i].Email+"</strong><br>Teléfono: "+result[i].Tel+"<br>ID-Nextel: "+result[i].IDNextel.replace(/-/g,"*")+"<br></address><div class='contact-box-footer'  style='border-radius: 25px;'><div class='m-t-xs btn-group'><a class='btn btn-xs btn-white col-md-6' onclick=TakeFoto("+'"'+result[i].idTécnico+'"'+")><i class='fa fa-camera'></i> Foto </a><a class='btn btn-xs btn-white' onclick=correo("+'"'+result[i].Email+'"'+")><i class='fa fa-send'></i> Password </a><a class='btn btn-xs btn-white col-md-6' onclick=editarT("+result[i].idTécnico+")>&nbsp;<i class='fa fa-pencil'></i> Editar</a><a class='btn btn-xs btn-white' onclick=delTech("+result[i].idTécnico+")><i class='fa fa-trash'></i> Elimar</a></div></div></div>"));
+                      }
+                }
+
                   }
 			        }
 		        }
 		    });
+        $("#imprime").click(function () {
+          $("div#datas").printArea();
+        });
+
+     
 		});
 </script>		
 </body>
